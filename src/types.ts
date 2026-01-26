@@ -1,21 +1,6 @@
+// Re-export all types from dedicated type files for easier imports
+export type { Deal, SortOption } from './types/deal';
 export type Language = 'en' | 'pl';
-
-export interface Deal {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    originalPrice: number;
-    currency: string;
-    discountPercentage: number;
-    imageUrl: string;
-    storeName: string;
-    storeUrl: string;
-    votes: number;
-    comments: number;
-    timestamp: string;
-    author: string;
-}
 
 export interface Translations {
     top: string;

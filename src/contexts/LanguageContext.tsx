@@ -1,26 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { Language, Translations } from '../types';
-
-const translations: Record<Language, Translations> = {
-    en: {
-        top: 'Top',
-        new: 'New',
-        percent: '-%',
-        communities: 'Communities',
-        searchPlaceholder: 'Search deals...',
-        goToStore: 'Go to store',
-        genericError: 'Something went wrong',
-    },
-    pl: {
-        top: 'Top',
-        new: 'Nowe',
-        percent: '-%',
-        communities: 'Społeczności',
-        searchPlaceholder: 'Szukaj okazji...',
-        goToStore: 'Przejdź do sklepu',
-        genericError: 'Coś poszło nie tak',
-    },
-};
+import { translations } from '../data/translations';
 
 interface LanguageContextType {
     language: Language;
@@ -40,6 +20,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLanguage() {
     const context = useContext(LanguageContext);
     if (context === undefined) {
