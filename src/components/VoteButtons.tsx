@@ -51,13 +51,13 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes }: VoteButtonsPro
     };
 
     return (
-        <div className="flex flex-col items-center gap-1 bg-gray-50 rounded-lg p-2 min-w-[70px]">
+        <div className="flex flex-col items-center gap-1 min-w-[40px] sm:min-w-[50px]">
             {/* Upvote button */}
             <button
                 onClick={handleUpvote}
                 className={`p-1.5 rounded transition-colors ${voteState === 'up'
-                    ? 'text-blue-600 bg-blue-100'
-                    : 'text-gray-400 hover:text-blue-500 hover:bg-blue-50'
+                    ? 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/40'
+                    : 'text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20'
                     }`}
                 aria-label="Upvote"
             >
@@ -65,7 +65,7 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes }: VoteButtonsPro
             </button>
 
             {/* Temperature display */}
-            <span className="text-lg font-bold text-gray-900 my-0.5">
+            <span className="text-lg font-bold text-gray-900 dark:text-white my-0.5">
                 {temperature}
             </span>
 
@@ -73,8 +73,8 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes }: VoteButtonsPro
             <button
                 onClick={handleDownvote}
                 className={`p-1.5 rounded transition-colors ${voteState === 'down'
-                    ? 'text-red-600 bg-red-100'
-                    : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
+                    ? 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/40'
+                    : 'text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20'
                     }`}
                 aria-label="Downvote"
             >

@@ -34,8 +34,8 @@ export const DealList = ({ deals }: DealListProps) => {
         <div className="space-y-6">
             {/* Header with Title and Sort Dropdown */}
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-gray-900">
-                    Today's Best Deals {filteredDeals.length > 0 && <span className="text-lg text-gray-600 font-normal">({sortedDeals.length})</span>}
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                    Today's Best Deals {filteredDeals.length > 0 && <span className="text-lg text-gray-600 dark:text-gray-400 font-normal">({sortedDeals.length})</span>}
                 </h1>
 
                 {/* Sort Dropdown */}
@@ -43,7 +43,7 @@ export const DealList = ({ deals }: DealListProps) => {
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as SortOption)}
-                        className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm font-medium text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
+                        className="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 pr-10 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-gray-400 dark:hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer transition-colors px-4 py-2"
                     >
                         <option value="hot">🔥 Trending</option>
                         <option value="new">🆕 Newest</option>
@@ -53,7 +53,7 @@ export const DealList = ({ deals }: DealListProps) => {
                     </select>
                     <ChevronDown
                         size={16}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
                     />
                 </div>
             </div>
@@ -65,9 +65,9 @@ export const DealList = ({ deals }: DealListProps) => {
                         <DealCard key={deal.id} deal={deal} />
                     ))
                 ) : (
-                    <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-                        <p className="text-gray-500 text-lg">No deals found</p>
-                        <p className="text-gray-400 text-sm mt-2">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-12 text-center transition-colors">
+                        <p className="text-gray-500 dark:text-gray-400 text-lg">No deals found</p>
+                        <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">
                             {filteredDeals.length === 0 && deals.length > 0
                                 ? 'Try adjusting your search filters'
                                 : 'Check back later for amazing deals!'}
@@ -79,7 +79,7 @@ export const DealList = ({ deals }: DealListProps) => {
             {/* Load More Button */}
             {sortedDeals.length > 0 && (
                 <div className="text-center pt-6">
-                    <button className="bg-white border border-gray-300 text-gray-700 font-medium px-8 py-3 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-colors">
+                    <button className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-medium px-8 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-600 transition-colors">
                         Load More Deals
                     </button>
                 </div>

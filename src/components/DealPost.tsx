@@ -121,7 +121,7 @@ export const DealPost = ({ onSubmit, onClose }: DealPostProps) => {
                 storeUrl: formData.storeUrl,
                 category: formData.category,
                 image: imagePreview,
-                comments: 0,
+                comments: [],
                 createdAt: new Date(),
                 author: {
                     username: 'Anonymous User',
@@ -239,14 +239,14 @@ export const DealPost = ({ onSubmit, onClose }: DealPostProps) => {
                     {/* Price Section */}
                     <div>
                         <label className="block text-sm font-medium text-gray-900 mb-2">
-                            Sale Price ($) <span className="text-red-500">*</span>
+                            Sale Price (zł) <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="number"
                             name="price"
                             value={formData.price}
                             onChange={handleInputChange}
-                            placeholder="99.99"
+                            placeholder="99.99 zł"
                             step="0.01"
                             min="0"
                             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.price
@@ -258,14 +258,14 @@ export const DealPost = ({ onSubmit, onClose }: DealPostProps) => {
 
                     <div>
                         <label className="block text-sm font-medium text-gray-900 mb-2">
-                            Original Price ($) <span className="text-red-500">*</span>
+                            Original Price (zł) <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="number"
                             name="originalPrice"
                             value={formData.originalPrice}
                             onChange={handleInputChange}
-                            placeholder="149.99"
+                            placeholder="149.99 zł"
                             step="0.01"
                             min="0"
                             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.originalPrice

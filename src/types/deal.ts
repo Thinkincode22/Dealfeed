@@ -1,3 +1,17 @@
+export interface Author {
+    username: string;
+    avatar: string;
+}
+
+export interface Comment {
+    id: string;
+    author: Author;
+    content: string;
+    createdAt: Date;
+    upvotes: number;
+    downvotes: number;
+}
+
 export interface Deal {
     id: string;
     title: string;
@@ -11,16 +25,13 @@ export interface Deal {
     category: string;
     upvotes: number;
     downvotes: number;
-    comments: number;
+    comments: Comment[];
     temperature: number;
     createdAt: Date;
+    author: Author;
     expiresAt?: Date;
     couponCode?: string;
     shippingInfo?: string;
-    author: {
-        username: string;
-        avatar?: string;
-    };
 }
 
 export type SortOption = 'hot' | 'new' | 'discount' | 'price-low' | 'price-high';

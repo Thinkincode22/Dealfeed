@@ -14,7 +14,24 @@ export const mockDeals: Deal[] = [
         category: 'Electronics',
         upvotes: 342,
         downvotes: 12,
-        comments: 45,
+        comments: [
+            {
+                id: 'c1',
+                author: { username: 'AudioFan', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Max' },
+                content: 'Great price! Just bought a pair.',
+                createdAt: new Date('2024-03-20T10:30:00Z'),
+                upvotes: 5,
+                downvotes: 0
+            },
+            {
+                id: 'c2',
+                author: { username: 'DealHunter', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' },
+                content: 'Is this the USB-C version?',
+                createdAt: new Date('2024-03-20T11:00:00Z'),
+                upvotes: 2,
+                downvotes: 0
+            }
+        ],
         temperature: 330,
         createdAt: new Date('2024-03-20T10:00:00Z'),
         author: {
@@ -35,7 +52,7 @@ export const mockDeals: Deal[] = [
         category: 'Electronics',
         upvotes: 521,
         downvotes: 40,
-        comments: 89,
+        comments: [],
         temperature: 481,
         createdAt: new Date('2024-03-19T15:30:00Z'),
         author: {
@@ -56,7 +73,7 @@ export const mockDeals: Deal[] = [
         category: 'Electronics',
         upvotes: 215,
         downvotes: 5,
-        comments: 32,
+        comments: [],
         temperature: 210,
         createdAt: new Date('2024-03-18T09:15:00Z'),
         author: {
@@ -77,7 +94,7 @@ export const mockDeals: Deal[] = [
         category: 'Home',
         upvotes: 890,
         downvotes: 15,
-        comments: 120,
+        comments: [],
         temperature: 875,
         createdAt: new Date('2024-03-21T08:00:00Z'),
         author: {
@@ -98,7 +115,7 @@ export const mockDeals: Deal[] = [
         category: 'Electronics',
         upvotes: 456,
         downvotes: 23,
-        comments: 67,
+        comments: [],
         temperature: 433,
         createdAt: new Date('2024-03-17T14:45:00Z'),
         author: {

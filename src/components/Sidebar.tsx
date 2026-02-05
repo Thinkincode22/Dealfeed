@@ -1,14 +1,58 @@
-import { Users, TrendingUp, Award, Info } from 'lucide-react';
+import { Users, TrendingUp, Award, Info, Tag, X } from 'lucide-react';
+import { useSearch } from '../contexts/SearchContext';
+
+const CATEGORIES = [
+    'Electronics',
+    'Home',
+    'Fashion',
+    'Sports',
+    'Gaming',
+    'Grocery'
+];
 
 export const Sidebar = () => {
+    const { filters, setCategory } = useSearch();
+
     return (
         <aside className="space-y-6">
+            {/* Categories Card */}
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                    <Tag size={20} className="text-blue-600" />
+                    Categories
+                </h2>
+                <div className="space-y-2">
+                    <button
+                        onClick={() => setCategory(undefined)}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!filters.category
+                            ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'
+                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                            }`}
+                    >
+                        All Categories
+                    </button>
+                    {CATEGORIES.map((category) => (
+                        <button
+                            key={category}
+                            onClick={() => setCategory(category)}
+                            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-between ${filters.category === category
+                                ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'
+                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                }`}
+                        >
+                            {category}
+                            {filters.category === category && <X size={14} onClick={(e) => { e.stopPropagation(); setCategory(undefined); }} className="hover:text-blue-900" />}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             {/* About DealFeed Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-bold text-gray-900 mb-3">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                     About DealFeed
                 </h2>
-                <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">
                     The community for finding and sharing the best deals. Join us to save money and share your finds.
                 </p>
                 <button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors">
@@ -17,8 +61,8 @@ export const Sidebar = () => {
             </div>
 
             {/* Stats Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-bold text-gray-900 mb-4">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
                     Community Stats
                 </h2>
                 <div className="space-y-3">
@@ -41,8 +85,8 @@ export const Sidebar = () => {
             </div>
 
             {/* Quick Links Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-bold text-gray-900 mb-4">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
                     Quick Links
                 </h2>
                 <div className="space-y-2">
@@ -54,14 +98,14 @@ export const Sidebar = () => {
             </div>
 
             {/* Info Box */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
                 <div className="flex items-start gap-3">
-                    <Info size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
+                    <Info size={20} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                     <div>
-                        <h3 className="text-sm font-semibold text-blue-900 mb-1">
+                        <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
                             How It Works
                         </h3>
-                        <p className="text-xs text-blue-700 leading-relaxed">
+                        <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
                             Vote on deals you love! Higher votes = hotter deals. Share your finds and help others save.
                         </p>
                     </div>
@@ -81,11 +125,11 @@ interface StatItemProps {
 const StatItem = ({ icon, label, value }: StatItemProps) => {
     return (
         <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-gray-600">
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                 {icon}
                 <span className="text-sm">{label}</span>
             </div>
-            <span className="font-bold text-gray-900">{value}</span>
+            <span className="font-bold text-gray-900 dark:text-white">{value}</span>
         </div>
     );
 };
@@ -100,7 +144,7 @@ const QuickLink = ({ href, children }: QuickLinkProps) => {
     return (
         <a
             href={href}
-            className="block text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 px-2 py-1.5 rounded transition-colors"
+            className="block text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-2 py-1.5 rounded transition-colors"
         >
             {children}
         </a>
