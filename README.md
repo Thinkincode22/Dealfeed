@@ -1,73 +1,69 @@
-# React + TypeScript + Vite
+# DealFeed 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Community-driven platform for finding and sharing the best deals in Poland (zł). Built with React, TypeScript, and Supabase.
 
-Currently, two official plugins are available:
+![DealFeed Screenshot](https://api.dicebear.com/7.x/shapes/svg?seed=dealfeed)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+- **RBAC (Role-Based Access Control)**:
+  - `user`: Post your own deals, upvote, and comment.
+  - `moderator`: Help manage the community by editing/deleting any content.
+  - `super_admin`: Full system access.
+- **Authentication**:
+  - Secure Email/Password login & signup.
+  - Google OAuth integration.
+  - Password reset flow.
+- **Real-time Deals**:
+  - Live temperature system (upvotes/downvotes).
+  - Advanced filtering by category and search.
+  - Image uploads and saved deals.
+- **Premium UI**:
+  - Modern Dark/Light mode support.
+  - Responsive design for mobile and desktop.
+  - Micro-animations and rich aesthetics.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠 Tech Stack
 
-## Expanding the ESLint configuration
+- **Frontend**: React 18, TypeScript, Vite.
+- **Styling**: Tailwind CSS, Lucide Icons.
+- **Backend / Auth**: Supabase (PostgreSQL, GoTrue, RLS).
+- **State Management**: React Context & Hooks.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone the repository
+```bash
+git clone https://github.com/Thinkincode22/Dealfeed.git
+cd Dealfeed
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 2. Install dependencies
+```bash
+npm install
 ```
+
+### 3. Environment Setup
+Copy `.env.example` to `.env.local` and fill in your Supabase credentials:
+```bash
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 4. Database Setup
+Execute the following SQL scripts in your Supabase SQL Editor:
+1. `supabase/migrations/001_initial_schema.sql`
+2. `supabase/migrations/002_rbac_schema.sql`
+
+### 5. Run the application
+```bash
+npm run dev
+```
+
+## 🔒 Security
+
+All data access is secured via **Supabase Row Level Security (RLS)**. Even if someone has the API keys, they can only perform actions allowed by their role on the database level.
+
+## 🛡 License
+
+MIT licensed. Feel free to use and contribute!
