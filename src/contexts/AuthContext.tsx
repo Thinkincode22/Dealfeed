@@ -28,13 +28,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Mock mode: simulate logged-in user
+        // Mock mode: start logged out by default
         if (!isSupabaseConfigured || !supabase) {
-            setUser({
-                id: 'mock-user-id',
-                email: currentUser.email,
-                profile: currentUser,
-            });
             setLoading(false);
             return;
         }
@@ -87,14 +82,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const signIn = async (email: string, password: string) => {
-        if (!supabase) return { error: new Error('Supabase not configured') };
+        if (!supabase) {
+            // Mock login
+            setUser({
+                id: 'mock-user-id',
+                email: currentUser.email,
+                profile: currentUser,
+            });
+            return { error: null };
+        }
 
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         return { error: error ? new Error(error.message) : null };
     };
 
     const signUp = async (email: string, password: string, username: string) => {
-        if (!supabase) return { error: new Error('Supabase not configured') };
+        if (!supabase) {
+            // Mock signup
+            setUser({
+                id: 'mock-user-id',
+                email: email,
+                profile: {
+                    ...currentUser,
+                    username,
+                    email,
+                },
+            });
+            return { error: null };
+        }
 
         const { error } = await supabase.auth.signUp({
             email,
@@ -107,7 +122,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const signOut = async () => {
-        if (!supabase) return;
+        if (!supabase) {
+            setUser(null);
+            return;
+        }
         await supabase.auth.signOut();
         setUser(null);
     };
