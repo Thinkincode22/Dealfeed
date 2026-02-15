@@ -95,7 +95,7 @@ function App() {
                 </div>
 
                 <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-8 text-center text-sm text-gray-600 dark:text-gray-400">
-                  © 2024 DealFeed. All rights reserved.
+                  © {new Date().getFullYear()} DealFeed. All rights reserved.
                 </div>
               </div>
             </footer>
