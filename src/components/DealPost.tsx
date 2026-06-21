@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Upload, X, AlertCircle, CheckCircle } from 'lucide-react';
 import type { Deal } from '../types/deal';
 import { useAuth } from '../contexts/AuthContext';
-import { CATEGORIES } from '../data/categories';
+import { CATEGORIES } from '../constants/categories';
 
 interface DealPostProps {
     onSubmit?: (deal: Omit<Deal, 'id' | 'temperature' | 'upvotes' | 'downvotes'>) => void;

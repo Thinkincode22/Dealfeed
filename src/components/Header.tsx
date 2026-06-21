@@ -4,18 +4,16 @@ import { Link } from 'react-router-dom';
 import { useSearch } from '../contexts/SearchContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useUserRole } from '../hooks/useUserRole';
 import { AuthModal } from './AuthModal';
 
 type NavItem = 'hot' | 'new' | 'discussed';
 
-interface HeaderProps {
-    onPostClick: () => void;
-}
-
-export const Header = ({ onPostClick }: HeaderProps) => {
+export const Header = () => {
     const { setQuery, setSortBy } = useSearch();
     const { theme, toggleTheme } = useTheme();
     const { user, isAuthenticated, signOut } = useAuth();
+    const { canModerate } = useUserRole();
     const [searchQuery, setSearchQuery] = useState('');
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
@@ -118,19 +116,27 @@ export const Header = ({ onPostClick }: HeaderProps) => {
                             {/* Post Deal Button - only if authenticated */}
                             {isAuthenticated && (
                                 <>
-                                    <button
-                                        onClick={onPostClick}
+                                    <Link
+                                        to="/create-deal"
                                         className="hidden sm:flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                                     >
                                         <Plus size={20} />
-                                        <span>Post Deal</span>
-                                    </button>
-                                    <button
-                                        onClick={onPostClick}
+                                        <span>Додати пропозицію</span>
+                                    </Link>
+                                    <Link
+                                        to="/create-deal"
                                         className="sm:hidden p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                                     >
                                         <Plus size={20} />
-                                    </button>
+                                    </Link>
+                                    {canModerate && (
+                                        <Link
+                                            to="/admin"
+                                            className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors border border-gray-200 dark:border-gray-700"
+                                        >
+                                            Адмін-панель
+                                        </Link>
+                                    )}
                                 </>
                             )}
 

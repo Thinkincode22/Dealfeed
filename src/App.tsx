@@ -6,6 +6,8 @@ import { Modal } from './components/Modal';
 import { HomePage } from './components/HomePage';
 import { DealPage } from './components/DealPage';
 import { ProfilePage } from './components/ProfilePage';
+import { CreateDealForm } from './components/CreateDealForm';
+import { AdminPage } from './pages/AdminPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { SearchProvider } from './contexts/SearchContext';
 import { AuthProvider } from './contexts/AuthContext';
@@ -42,7 +44,7 @@ function App() {
         <SearchProvider>
           <Router>
             <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
-              <Header onPostClick={() => setIsPostModalOpen(true)} />
+              <Header />
 
               {error && (
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
@@ -56,6 +58,12 @@ function App() {
                 <Route path="/" element={<HomePage deals={deals} hasMore={hasMore} onLoadMore={loadMore} loading={loading} />} />
                 <Route path="/deal/:id" element={<DealPage deals={deals} />} />
                 <Route path="/profile" element={<ProfilePage deals={deals} />} />
+                <Route path="/create-deal" element={
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <CreateDealForm />
+                  </div>
+                } />
+                <Route path="/admin" element={<AdminPage />} />
                 <Route path="*" element={
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Page Not Found</h2>
