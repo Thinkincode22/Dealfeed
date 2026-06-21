@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Header } from './components/Header';
 import { DealPost } from './components/DealPost';
 import { Modal } from './components/Modal';
@@ -110,6 +111,9 @@ function App() {
                 onClose={() => setIsPostModalOpen(false)}
               />
             </Modal>
+            
+            {/* Vercel Speed Insights */}
+            <SpeedInsights />
           </div>
         </Router>
       </SearchProvider>
