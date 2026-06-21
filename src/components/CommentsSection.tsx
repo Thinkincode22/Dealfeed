@@ -1,33 +1,119 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ThumbsUp, ThumbsDown, MessageCircle, Send } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import type { Comment } from '../types/deal';
 
 interface CommentsSectionProps {
+    dealId: string;
     initialComments: Comment[];
 }
 
-export const CommentsSection = ({ initialComments }: CommentsSectionProps) => {
+type DBCommentRow = {
+    id: string;
+    content: string;
+    created_at: string;
+    author?: { username?: string; avatar_url?: string };
+};
+
+export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProps) => {
+    const { user, isAuthenticated } = useAuth();
     const [comments, setComments] = useState<Comment[]>(initialComments);
     const [newComment, setNewComment] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // Load comments from DB if Supabase is configured
+    useEffect(() => {
+        if (!isSupabaseConfigured || !supabase) return;
+
+        const fetchComments = async () => {
+            const client = supabase!;
+            const { data, error } = await client
+                .from('comments')
+                .select('id, content, created_at, author:profiles(username, avatar_url)')
+                .eq('deal_id', dealId)
+                .order('created_at', { ascending: false });
+
+            if (!error && data) {
+                const mapped: Comment[] = (data as DBCommentRow[]).map(c => ({
+                    id: c.id,
+                    content: c.content,
+                    createdAt: new Date(c.created_at),
+                    upvotes: 0,
+                    downvotes: 0,
+                    author: {
+                        username: c.author?.username || 'Anonymous',
+                        avatar: c.author?.avatar_url || '',
+                    },
+                }));
+                setComments(mapped);
+            }
+        };
+
+        fetchComments();
+    }, [dealId]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newComment.trim()) return;
 
-        const comment: Comment = {
-            id: `c-${Date.now()}`,
-            author: {
-                username: 'Guest User',
-                avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Date.now()}`
-            },
-            content: newComment,
-            createdAt: new Date(),
-            upvotes: 0,
-            downvotes: 0
-        };
+        setIsSubmitting(true);
+        setSubmitError('');
 
-        setComments(prev => [comment, ...prev]);
-        setNewComment('');
+        if (isSupabaseConfigured && supabase && user) {
+            try {
+                const client = supabase;
+                const { data, error } = await client
+                    .from('comments')
+                    .insert({
+                        deal_id: dealId,
+                        author_id: user.id,
+                        content: newComment.trim(),
+                    })
+                    .select('id, content, created_at')
+                    .single();
+
+                if (error) throw error;
+
+                const comment: Comment = {
+                    id: data.id,
+                    content: data.content,
+                    createdAt: new Date(data.created_at),
+                    upvotes: 0,
+                    downvotes: 0,
+                    author: {
+                        username: user.profile?.username || 'User',
+                        avatar: user.profile?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`,
+                    },
+                };
+
+                setComments(prev => [comment, ...prev]);
+                setNewComment('');
+            } catch (err) {
+                console.error('Error posting comment:', err);
+                setSubmitError('Failed to post comment. Please try again.');
+            } finally {
+                setIsSubmitting(false);
+            }
+        } else {
+            // Mock mode or not logged in
+            const comment: Comment = {
+                id: `c-${Date.now()}`,
+                author: {
+                    username: user?.profile?.username || 'Guest User',
+                    avatar: user?.profile?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${Date.now()}`,
+                },
+                content: newComment,
+                createdAt: new Date(),
+                upvotes: 0,
+                downvotes: 0,
+            };
+
+            setComments(prev => [comment, ...prev]);
+            setNewComment('');
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -38,23 +124,34 @@ export const CommentsSection = ({ initialComments }: CommentsSectionProps) => {
             </h3>
 
             {/* Comment Form */}
-            <form onSubmit={handleSubmit} className="mb-8">
-                <div className="relative">
-                    <textarea
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="What do you think about this deal?"
-                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-4 pr-12 h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
-                    />
-                    <button
-                        type="submit"
-                        disabled={!newComment.trim()}
-                        className="absolute bottom-4 right-4 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors"
-                    >
-                        <Send size={18} />
-                    </button>
+            {isAuthenticated ? (
+                <form onSubmit={handleSubmit} className="mb-8">
+                    <div className="relative">
+                        <textarea
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="What do you think about this deal?"
+                            className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-4 pr-12 h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
+                        />
+                        <button
+                            type="submit"
+                            disabled={!newComment.trim() || isSubmitting}
+                            className="absolute bottom-4 right-4 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors"
+                        >
+                            <Send size={18} />
+                        </button>
+                    </div>
+                    {submitError && (
+                        <p className="mt-2 text-sm text-red-600">{submitError}</p>
+                    )}
+                </form>
+            ) : (
+                <div className="mb-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                        Sign in to leave a comment
+                    </p>
                 </div>
-            </form>
+            )}
 
             {/* Comments List */}
             <div className="space-y-6">
@@ -86,9 +183,6 @@ export const CommentsSection = ({ initialComments }: CommentsSectionProps) => {
                                     <button className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
                                         <ThumbsDown size={14} />
                                         <span>{comment.downvotes}</span>
-                                    </button>
-                                    <button className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium">
-                                        Reply
                                     </button>
                                 </div>
                             </div>

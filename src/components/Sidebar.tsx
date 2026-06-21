@@ -1,14 +1,6 @@
 import { Users, TrendingUp, Award, Info, Tag, X } from 'lucide-react';
 import { useSearch } from '../contexts/SearchContext';
-
-const CATEGORIES = [
-    'Electronics',
-    'Home',
-    'Fashion',
-    'Sports',
-    'Gaming',
-    'Grocery'
-];
+import { CATEGORIES } from '../data/categories';
 
 export const Sidebar = () => {
     const { filters, setCategory } = useSearch();

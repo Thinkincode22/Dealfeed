@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Search, Bell, Plus, Zap, Sun, Moon, LogIn, LogOut, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSearch } from '../contexts/SearchContext';
@@ -13,17 +13,35 @@ interface HeaderProps {
 }
 
 export const Header = ({ onPostClick }: HeaderProps) => {
-    const [activeNav, setActiveNav] = useState<NavItem>('hot');
-    const { setQuery } = useSearch();
+    const { setQuery, setSortBy } = useSearch();
     const { theme, toggleTheme } = useTheme();
     const { user, isAuthenticated, signOut } = useAuth();
     const [searchQuery, setSearchQuery] = useState('');
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+    const [activeNav, setActiveNav] = useState<NavItem>('hot');
+    const debounceTimer = useRef<ReturnType<typeof setTimeout>>(null);
 
     const handleSearchChange = (value: string) => {
         setSearchQuery(value);
-        setQuery(value);
+        // Debounce search by 300ms
+        if (debounceTimer.current) clearTimeout(debounceTimer.current);
+        debounceTimer.current = setTimeout(() => {
+            setQuery(value);
+        }, 300);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (debounceTimer.current) clearTimeout(debounceTimer.current);
+        };
+    }, []);
+
+    const handleNavClick = (nav: NavItem) => {
+        setActiveNav(nav);
+        if (nav === 'hot') setSortBy('hot');
+        else if (nav === 'new') setSortBy('new');
+        else if (nav === 'discussed') setSortBy('hot'); // discussed = most comments, fallback to hot for now
     };
 
     const openLogin = () => {
@@ -59,19 +77,19 @@ export const Header = ({ onPostClick }: HeaderProps) => {
                             <nav className="hidden md:flex items-center gap-1">
                                 <NavButton
                                     active={activeNav === 'hot'}
-                                    onClick={() => setActiveNav('hot')}
+                                    onClick={() => handleNavClick('hot')}
                                 >
                                     Hot
                                 </NavButton>
                                 <NavButton
                                     active={activeNav === 'new'}
-                                    onClick={() => setActiveNav('new')}
+                                    onClick={() => handleNavClick('new')}
                                 >
                                     New
                                 </NavButton>
                                 <NavButton
                                     active={activeNav === 'discussed'}
-                                    onClick={() => setActiveNav('discussed')}
+                                    onClick={() => handleNavClick('discussed')}
                                 >
                                     Discussed
                                 </NavButton>

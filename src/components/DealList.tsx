@@ -1,15 +1,18 @@
-import { useState } from 'react';
 import { DealCard } from './DealCard';
 import type { Deal, SortOption } from '../types/deal';
 import { ChevronDown } from 'lucide-react';
 import { useFilteredDeals } from '../hooks/useFilteredDeals';
+import { useSearch } from '../contexts/SearchContext';
 
 interface DealListProps {
     deals: Deal[];
+    hasMore: boolean;
+    onLoadMore: () => void;
+    loading: boolean;
 }
 
-export const DealList = ({ deals }: DealListProps) => {
-    const [sortBy, setSortBy] = useState<SortOption>('hot');
+export const DealList = ({ deals, hasMore, onLoadMore, loading }: DealListProps) => {
+    const { sortBy, setSortBy } = useSearch();
     const filteredDeals = useFilteredDeals(deals);
 
     // Сортуємо deals
@@ -77,10 +80,14 @@ export const DealList = ({ deals }: DealListProps) => {
             </div>
 
             {/* Load More Button */}
-            {sortedDeals.length > 0 && (
+            {hasMore && sortedDeals.length > 0 && (
                 <div className="text-center pt-6">
-                    <button className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-medium px-8 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-600 transition-colors">
-                        Load More Deals
+                    <button
+                        onClick={onLoadMore}
+                        disabled={loading}
+                        className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-medium px-8 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-600 transition-colors disabled:opacity-50"
+                    >
+                        {loading ? 'Loading...' : 'Load More Deals'}
                     </button>
                 </div>
             )}

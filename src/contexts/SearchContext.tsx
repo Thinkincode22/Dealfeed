@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
-import type { Deal } from '../types/deal';
+import type { Deal, SortOption } from '../types/deal';
 
 interface SearchFilters {
     query: string;
@@ -11,10 +11,12 @@ interface SearchFilters {
 
 interface SearchContextType {
     filters: SearchFilters;
+    sortBy: SortOption;
     setQuery: (query: string) => void;
     setCategory: (category: string | undefined) => void;
     setPriceRange: (min?: number, max?: number) => void;
     setMinDiscount: (discount?: number) => void;
+    setSortBy: (sort: SortOption) => void;
     clearFilters: () => void;
     filteredDeals: Deal[];
     setFilteredDeals: (deals: Deal[]) => void;
@@ -26,6 +28,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     const [filters, setFilters] = useState<SearchFilters>({
         query: '',
     });
+    const [sortBy, setSortBy] = useState<SortOption>('hot');
     const [filteredDeals, setFilteredDeals] = useState<Deal[]>([]);
 
     const setQuery = (query: string) => {
@@ -53,10 +56,12 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         <SearchContext.Provider
             value={{
                 filters,
+                sortBy,
                 setQuery,
                 setCategory,
                 setPriceRange,
                 setMinDiscount,
+                setSortBy,
                 clearFilters,
                 filteredDeals,
                 setFilteredDeals,

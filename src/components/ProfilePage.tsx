@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Calendar, MapPin, Award, Package, Heart, Settings } from 'lucide-react';
 import type { Deal } from '../types/deal';
-import { currentUser } from '../data/mockUser';
+import { useAuth } from '../contexts/AuthContext';
 import { DealCard } from './DealCard';
 
 interface ProfilePageProps {
@@ -11,14 +11,24 @@ interface ProfilePageProps {
 type Tab = 'my-deals' | 'saved' | 'settings';
 
 export const ProfilePage = ({ deals }: ProfilePageProps) => {
+    const { user, isAuthenticated } = useAuth();
     const [activeTab, setActiveTab] = useState<Tab>('my-deals');
 
-    // Filter deals for "My Deals" tab (simulated by random check or just using all for now for demo)
-    // For demo purposes, let's say "My Deals" are the first 2 deals
-    const myDeals = deals.slice(0, 2);
+    if (!isAuthenticated || !user) {
+        return (
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Sign In Required</h2>
+                <p className="text-gray-600 dark:text-gray-400 mb-8">Please sign in to view your profile.</p>
+                <a href="/" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium hover:underline">
+                    &larr; Back to Deals
+                </a>
+            </div>
+        );
+    }
 
-    // "Saved" deals could be the next 2
-    const savedDeals = deals.slice(2, 4);
+    const profile = user.profile;
+    const myDeals = deals.filter(d => d.author.username === profile?.username);
+    const savedDeals: Deal[] = []; // TODO: fetch from saved_deals table
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -28,16 +38,16 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                 <div className="px-8 pb-8">
                     <div className="relative flex items-end -mt-12 mb-6">
                         <img
-                            src={currentUser.avatar}
-                            alt={currentUser.username}
+                            src={profile?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`}
+                            alt={profile?.username || 'User'}
                             className="w-32 h-32 rounded-full border-4 border-white dark:border-gray-900 bg-white dark:bg-gray-800"
                         />
                         <div className="ml-6 mb-2 flex-1">
                             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                                {currentUser.username}
+                                {profile?.username || 'User'}
                             </h1>
                             <p className="text-gray-600 dark:text-gray-400 mt-1">
-                                {currentUser.bio}
+                                {profile?.bio || 'No bio yet'}
                             </p>
                         </div>
                         <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-gray-700 dark:text-gray-200 font-medium transition-colors">
@@ -52,7 +62,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                 <Award className="text-blue-600 dark:text-blue-400" size={20} />
                             </div>
                             <div>
-                                <div className="font-bold text-gray-900 dark:text-white">{currentUser.reputation}</div>
+                                <div className="font-bold text-gray-900 dark:text-white">{profile?.reputation || 0}</div>
                                 <div className="text-sm">Reputation</div>
                             </div>
                         </div>
@@ -61,7 +71,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                 <Package className="text-green-600 dark:text-green-400" size={20} />
                             </div>
                             <div>
-                                <div className="font-bold text-gray-900 dark:text-white">{currentUser.dealsPosted}</div>
+                                <div className="font-bold text-gray-900 dark:text-white">{myDeals.length}</div>
                                 <div className="text-sm">Deals Posted</div>
                             </div>
                         </div>
@@ -71,7 +81,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                             </div>
                             <div>
                                 <div className="font-bold text-gray-900 dark:text-white">
-                                    {currentUser.joinDate.toLocaleDateString()}
+                                    {profile?.joinDate?.toLocaleDateString() || 'N/A'}
                                 </div>
                                 <div className="text-sm">Joined</div>
                             </div>
@@ -82,7 +92,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                             </div>
                             <div>
                                 <div className="font-bold text-gray-900 dark:text-white">
-                                    {currentUser.location}
+                                    {profile?.location || 'Not set'}
                                 </div>
                                 <div className="text-sm">Location</div>
                             </div>
@@ -102,7 +112,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                 >
                     <div className="flex items-center gap-2">
                         <Package size={18} />
-                        My Deals
+                        My Deals ({myDeals.length})
                     </div>
                     {activeTab === 'my-deals' && (
                         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t-full"></div>
@@ -117,7 +127,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                 >
                     <div className="flex items-center gap-2">
                         <Heart size={18} />
-                        Saved
+                        Saved ({savedDeals.length})
                     </div>
                     {activeTab === 'saved' && (
                         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t-full"></div>
@@ -144,17 +154,33 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
             <div className="space-y-6">
                 {activeTab === 'my-deals' && (
                     <div className="max-w-4xl mx-auto space-y-4">
-                        {myDeals.map(deal => (
-                            <DealCard key={deal.id} deal={deal} />
-                        ))}
+                        {myDeals.length > 0 ? (
+                            myDeals.map(deal => (
+                                <DealCard key={deal.id} deal={deal} />
+                            ))
+                        ) : (
+                            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
+                                <Package size={48} className="mx-auto mb-4 text-gray-400" />
+                                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No deals yet</h3>
+                                <p className="text-gray-500 dark:text-gray-400">Start posting deals to see them here!</p>
+                            </div>
+                        )}
                     </div>
                 )}
 
                 {activeTab === 'saved' && (
                     <div className="max-w-4xl mx-auto space-y-4">
-                        {savedDeals.map(deal => (
-                            <DealCard key={deal.id} deal={deal} />
-                        ))}
+                        {savedDeals.length > 0 ? (
+                            savedDeals.map(deal => (
+                                <DealCard key={deal.id} deal={deal} />
+                            ))
+                        ) : (
+                            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
+                                <Heart size={48} className="mx-auto mb-4 text-gray-400" />
+                                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No saved deals</h3>
+                                <p className="text-gray-500 dark:text-gray-400">Save deals to see them here!</p>
+                            </div>
+                        )}
                     </div>
                 )}
 

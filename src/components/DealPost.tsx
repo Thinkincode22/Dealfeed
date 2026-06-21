@@ -1,26 +1,17 @@
 import { useState } from 'react';
-import { Upload, X, AlertCircle } from 'lucide-react';
+import { Upload, X, AlertCircle, CheckCircle } from 'lucide-react';
 import type { Deal } from '../types/deal';
+import { useAuth } from '../contexts/AuthContext';
+import { CATEGORIES } from '../data/categories';
 
 interface DealPostProps {
     onSubmit?: (deal: Omit<Deal, 'id' | 'temperature' | 'upvotes' | 'downvotes'>) => void;
     onClose?: () => void;
 }
 
-const CATEGORIES = [
-    'Electronics',
-    'Fashion',
-    'Home & Garden',
-    'Sports',
-    'Books',
-    'Toys & Games',
-    'Food & Grocery',
-    'Beauty & Health',
-    'Automotive',
-    'Other',
-];
-
 export const DealPost = ({ onSubmit, onClose }: DealPostProps) => {
+    const { user } = useAuth();
+    const [successMessage, setSuccessMessage] = useState('');
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -124,8 +115,8 @@ export const DealPost = ({ onSubmit, onClose }: DealPostProps) => {
                 comments: [],
                 createdAt: new Date(),
                 author: {
-                    username: 'Anonymous User',
-                    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`,
+                    username: user?.profile?.username || 'Anonymous User',
+                    avatar: user?.profile?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id || 'anon'}`,
                 },
                 ...(formData.couponCode && { couponCode: formData.couponCode }),
                 ...(formData.expiresAt && { expiresAt: new Date(formData.expiresAt) }),
@@ -153,10 +144,14 @@ export const DealPost = ({ onSubmit, onClose }: DealPostProps) => {
             });
             setImagePreview('');
 
-            alert('Deal posted successfully!');
+            setSuccessMessage('Deal posted successfully!');
+            setTimeout(() => {
+                setSuccessMessage('');
+                if (onClose) onClose();
+            }, 2000);
         } catch (error) {
             console.error('Error posting deal:', error);
-            alert('Failed to post deal. Please try again.');
+            setErrors({ submit: 'Failed to post deal. Please try again.' });
         } finally {
             setIsSubmitting(false);
         }
@@ -180,6 +175,12 @@ export const DealPost = ({ onSubmit, onClose }: DealPostProps) => {
             {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
                 {/* Alert */}
+                {successMessage && (
+                    <div className="flex gap-3 bg-green-50 border border-green-200 rounded-lg p-4">
+                        <CheckCircle size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
+                        <p className="font-medium text-green-900">{successMessage}</p>
+                    </div>
+                )}
                 {Object.keys(errors).length > 0 && (
                     <div className="flex gap-3 bg-red-50 border border-red-200 rounded-lg p-4">
                         <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />

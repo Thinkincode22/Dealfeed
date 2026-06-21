@@ -53,6 +53,7 @@ export const DealCard = ({ deal }: DealCardProps) => {
                             <img
                                 src={image}
                                 alt={title}
+                                loading="lazy"
                                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                             />
                             {discount > 0 && (

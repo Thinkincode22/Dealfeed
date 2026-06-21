@@ -55,6 +55,7 @@ export const DealPage = ({ deals }: DealPageProps) => {
                             <img
                                 src={image}
                                 alt={title}
+                                loading="lazy"
                                 className="w-full h-full object-contain mix-blend-multiply"
                             />
                             {discount > 0 && (
@@ -143,7 +144,7 @@ export const DealPage = ({ deals }: DealPageProps) => {
 
                 {/* Footer / Comments Section */}
                 <div className="mt-8">
-                    <CommentsSection initialComments={comments} />
+                    <CommentsSection dealId={deal.id} initialComments={comments} />
                 </div>
             </div>
         </div>
