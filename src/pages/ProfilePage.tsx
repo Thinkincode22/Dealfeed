@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Calendar, MapPin, Award, Package, Heart, Settings } from 'lucide-react';
 import type { Deal } from '../types/deal';
 import { useAuth } from '../contexts/AuthContext';
-import { DealCard } from './DealCard';
+import { DealCard } from '../components/DealCard';
 
 interface ProfilePageProps {
     deals: Deal[];
@@ -127,7 +127,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                 >
                     <div className="flex items-center gap-2">
                         <Heart size={18} />
-                        Saved ({savedDeals.length})
+                        Zapisane <span className="text-xs text-gray-400">(Wkrótce)</span>
                     </div>
                     {activeTab === 'saved' && (
                         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t-full"></div>
@@ -142,7 +142,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                 >
                     <div className="flex items-center gap-2">
                         <Settings size={18} />
-                        Settings
+                        Ustawienia <span className="text-xs text-gray-400">(Wkrótce)</span>
                     </div>
                     {activeTab === 'settings' && (
                         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t-full"></div>
@@ -177,8 +177,8 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                         ) : (
                             <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
                                 <Heart size={48} className="mx-auto mb-4 text-gray-400" />
-                                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No saved deals</h3>
-                                <p className="text-gray-500 dark:text-gray-400">Save deals to see them here!</p>
+                                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Brak zapisanych okazji</h3>
+                                <p className="text-gray-500 dark:text-gray-400">Funkcja zapisywania okazji pojawi się wkrótce!</p>
                             </div>
                         )}
                     </div>
@@ -187,8 +187,8 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                 {activeTab === 'settings' && (
                     <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center text-gray-500 dark:text-gray-400">
                         <Settings size={48} className="mx-auto mb-4 opacity-50" />
-                        <h3 className="text-lg font-medium mb-2">Settings Panel</h3>
-                        <p>User settings implementation would go here.</p>
+                        <h3 className="text-lg font-medium mb-2">Panel Ustawień</h3>
+                        <p>Opcje konta będą dostępne wkrótce.</p>
                     </div>
                 )}
             </div>

@@ -3,18 +3,12 @@ import { ThumbsUp, ThumbsDown, MessageCircle, Send } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import type { Comment } from '../types/deal';
+import type { DBCommentRow } from '../types/database';
 
 interface CommentsSectionProps {
     dealId: string;
     initialComments: Comment[];
 }
-
-type DBCommentRow = {
-    id: string;
-    content: string;
-    created_at: string;
-    author?: { username?: string; avatar_url?: string };
-};
 
 export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProps) => {
     const { user, isAuthenticated } = useAuth();
@@ -96,13 +90,13 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
             } finally {
                 setIsSubmitting(false);
             }
-        } else {
-            // Mock mode or not logged in
+        } else if (user) {
+            // Mock mode — only if logged in
             const comment: Comment = {
                 id: `c-${Date.now()}`,
                 author: {
-                    username: user?.profile?.username || 'Guest User',
-                    avatar: user?.profile?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${Date.now()}`,
+                    username: user.profile?.username || 'Guest User',
+                    avatar: user.profile?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${Date.now()}`,
                 },
                 content: newComment,
                 createdAt: new Date(),
@@ -112,6 +106,9 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
 
             setComments(prev => [comment, ...prev]);
             setNewComment('');
+            setIsSubmitting(false);
+        } else {
+            setSubmitError('Please sign in to comment.');
             setIsSubmitting(false);
         }
     };
@@ -175,16 +172,7 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
                                     </div>
                                     <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{comment.content}</p>
                                 </div>
-                                <div className="flex items-center gap-4 mt-2 ml-2">
-                                    <button className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                                        <ThumbsUp size={14} />
-                                        <span>{comment.upvotes}</span>
-                                    </button>
-                                    <button className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
-                                        <ThumbsDown size={14} />
-                                        <span>{comment.downvotes}</span>
-                                    </button>
-                                </div>
+
                             </div>
                         </div>
                     ))

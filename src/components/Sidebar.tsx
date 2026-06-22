@@ -11,7 +11,7 @@ export const Sidebar = () => {
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                     <Tag size={20} className="text-blue-600" />
-                    Categories
+                    Kategorie
                 </h2>
                 <div className="space-y-2">
                     <button
@@ -21,7 +21,7 @@ export const Sidebar = () => {
                             : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
                             }`}
                     >
-                        All Categories
+                        Wszystkie Kategorie
                     </button>
                     {CATEGORIES.map((category) => (
                         <button
@@ -42,20 +42,20 @@ export const Sidebar = () => {
             {/* About DealFeed Card */}
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                    About DealFeed
+                    O DealFeed
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">
-                    The community for finding and sharing the best deals. Join us to save money and share your finds.
+                    Społeczność do znajdowania i dzielenia się najlepszymi okazjami. Dołącz do nas, aby oszczędzać i dzielić się znaleziskami.
                 </p>
                 <button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors">
-                    Join Community
+                    Dołącz do Społeczności
                 </button>
             </div>
 
             {/* Stats Card */}
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                    Community Stats
+                    Statystyki Społeczności <span className="text-xs text-gray-400 font-normal ml-1">(Demo)</span>
                 </h2>
                 <div className="space-y-3">
                     <StatItem
@@ -76,18 +76,7 @@ export const Sidebar = () => {
                 </div>
             </div>
 
-            {/* Quick Links Card */}
-            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                    Quick Links
-                </h2>
-                <div className="space-y-2">
-                    <QuickLink href="/guidelines">Community Guidelines</QuickLink>
-                    <QuickLink href="/faq">FAQ</QuickLink>
-                    <QuickLink href="/contact">Contact Support</QuickLink>
-                    <QuickLink href="/about">About Us</QuickLink>
-                </div>
-            </div>
+
 
             {/* Info Box */}
             <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
@@ -95,10 +84,10 @@ export const Sidebar = () => {
                     <Info size={20} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                     <div>
                         <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
-                            How It Works
+                            Jak to działa
                         </h3>
                         <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
-                            Vote on deals you love! Higher votes = hotter deals. Share your finds and help others save.
+                            Głosuj na ulubione okazje! Więcej głosów = gorętsze okazje. Dziel się znaleziskami i pomagaj innym oszczędzać.
                         </p>
                     </div>
                 </div>
@@ -126,19 +115,4 @@ const StatItem = ({ icon, label, value }: StatItemProps) => {
     );
 };
 
-// Helper component for quick links
-interface QuickLinkProps {
-    href: string;
-    children: React.ReactNode;
-}
 
-const QuickLink = ({ href, children }: QuickLinkProps) => {
-    return (
-        <a
-            href={href}
-            className="block text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-2 py-1.5 rounded transition-colors"
-        >
-            {children}
-        </a>
-    );
-};

@@ -42,6 +42,9 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId }: VoteBu
     }, [dealId, user]);
 
     const handleVote = async (value: 1 | -1) => {
+        // Require authentication to vote
+        if (!user) return;
+
         // Rate limit: 1 vote per second
         if (Date.now() - lastVoteTime.current < 1000) return;
         lastVoteTime.current = Date.now();

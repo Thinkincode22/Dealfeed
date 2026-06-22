@@ -25,7 +25,7 @@ Community-driven platform for finding and sharing the best deals in Poland (zł)
 
 ## 🛠 Tech Stack
 
-- **Frontend**: React 18, TypeScript, Vite.
+- **Frontend**: React 19, TypeScript, Vite.
 - **Styling**: Tailwind CSS, Lucide Icons.
 - **Backend / Auth**: Supabase (PostgreSQL, GoTrue, RLS).
 - **State Management**: React Context & Hooks.
@@ -51,9 +51,12 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ### 4. Database Setup
-Execute the following SQL scripts in your Supabase SQL Editor:
-1. `supabase/migrations/001_initial_schema.sql`
-2. `supabase/migrations/002_rbac_schema.sql`
+Execute the SQL migrations from the `supabase/migrations/` folder in order:
+1. `001` - (DEPRECATED - do not run)
+2. `002_rbac_schema.sql`
+3. `003_secure_policies.sql`
+4. `004_deal_status_and_constraints.sql`
+5. `005_secure_role_update.sql`
 
 ### 5. Run the application
 ```bash

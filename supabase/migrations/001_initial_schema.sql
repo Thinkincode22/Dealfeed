@@ -1,3 +1,9 @@
+-- ============================================
+-- ⚠️ DEPRECATED: This migration is superseded by 002_rbac_schema.sql
+-- Do NOT run this file if you are running 002+
+-- Kept for historical reference only.
+-- ============================================
+
 -- Supabase Migration: Initial Schema for DealFeed
 -- Run this in your Supabase SQL Editor
 

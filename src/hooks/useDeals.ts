@@ -1,30 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-type DBCommentRow = {
-  id: string;
-  content: string;
-  created_at: string;
-  author?: { username?: string; avatar_url?: string };
-};
-type DBDealRow = {
-  id: string;
-  title: string;
-  description?: string;
-  price: number;
-  original_price?: number;
-  discount?: number;
-  image_url?: string;
-  store?: string;
-  store_url?: string;
-  category?: string;
-  temperature?: number;
-  created_at?: string;
-  expires_at?: string;
-  coupon_code?: string;
-  shipping_info?: string;
-  is_active?: boolean;
-  author?: { username?: string; avatar_url?: string };
-  comments?: DBCommentRow[];
-};
+import type { DBCommentRow, DBDealRow } from '../types/database';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { mockDeals } from '../data/mockDeals';
 import type { Deal } from '../types/deal';
@@ -111,6 +86,7 @@ export const useDeals = (): UseDealsResult => {
                     )
                 `)
                 .eq('is_active', true)
+                .eq('status', 'approved')
                 .order('created_at', { ascending: false })
                 .range(from, to);
 
@@ -149,6 +125,7 @@ export const useDeals = (): UseDealsResult => {
                     )
                 `)
                 .eq('is_active', true)
+                .eq('status', 'approved')
                 .order('created_at', { ascending: false })
                 .range(from, to);
 

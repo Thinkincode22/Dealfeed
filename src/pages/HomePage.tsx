@@ -1,5 +1,5 @@
-import { DealList } from './DealList';
-import { Sidebar } from './Sidebar';
+import { DealList } from '../components/DealList';
+import { Sidebar } from '../components/Sidebar';
 import type { Deal } from '../types/deal';
 
 interface HomePageProps {

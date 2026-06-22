@@ -7,13 +7,17 @@
 ALTER TABLE deals ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pending'
     CHECK (status IN ('pending', 'approved', 'rejected'));
 
--- 2. CHECK constraints
+-- 2. CHECK constraints (drop if exist from 003 to avoid conflicts)
+ALTER TABLE deals DROP CONSTRAINT IF EXISTS deals_title_length;
 ALTER TABLE deals ADD CONSTRAINT deals_title_length
     CHECK (char_length(title) >= 5 AND char_length(title) <= 200);
 
+ALTER TABLE deals DROP CONSTRAINT IF EXISTS deals_price_positive;
+ALTER TABLE deals DROP CONSTRAINT IF EXISTS deals_price_non_negative;
 ALTER TABLE deals ADD CONSTRAINT deals_price_non_negative
     CHECK (price >= 0);
 
+ALTER TABLE deals DROP CONSTRAINT IF EXISTS deals_discount_range;
 ALTER TABLE deals ADD CONSTRAINT deals_discount_range
     CHECK (discount >= 0 AND discount <= 100);
 
@@ -35,3 +39,4 @@ CREATE POLICY "Deals feed policy" ON deals
         OR author_id = auth.uid()
         OR get_user_role() IN ('moderator', 'super_admin')
     );
+

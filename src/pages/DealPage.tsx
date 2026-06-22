@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ExternalLink, Store, Clock, Share2 } from 'lucide-react';
-import { VoteButtons } from './VoteButtons';
-import { CommentsSection } from './CommentsSection';
+import { VoteButtons } from '../components/VoteButtons';
+import { CommentsSection } from '../components/CommentsSection';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import type { Deal } from '../types/deal';
 
 interface DealPageProps {
@@ -10,9 +12,96 @@ interface DealPageProps {
 
 export const DealPage = ({ deals }: DealPageProps) => {
     const { id } = useParams<{ id: string }>();
-    const deal = deals.find(d => d.id === id);
+    const [fetchedDeal, setFetchedDeal] = useState<Deal | null>(null);
+    const [fetchLoading, setFetchLoading] = useState(false);
+    const [fetchError, setFetchError] = useState(false);
 
-    if (!deal) {
+    // Try to find in pre-loaded deals first
+    const preloadedDeal = deals.find(d => d.id === id);
+    const deal = preloadedDeal || fetchedDeal;
+
+    // Fetch from DB if not found in pre-loaded deals
+    useEffect(() => {
+        if (preloadedDeal || !id || !isSupabaseConfigured || !supabase) return;
+
+        const fetchDeal = async () => {
+            setFetchLoading(true);
+            setFetchError(false);
+            try {
+                const { data, error } = await supabase
+                    .from('deals')
+                    .select(`
+                        *,
+                        author:profiles(*),
+                        comments(
+                            *,
+                            author:profiles(*)
+                        )
+                    `)
+                    .eq('id', id)
+                    .single();
+
+                if (error || !data) {
+                    setFetchError(true);
+                    return;
+                }
+
+                setFetchedDeal({
+                    id: data.id,
+                    title: data.title,
+                    description: data.description || '',
+                    price: Number(data.price),
+                    originalPrice: Number(data.original_price) || Number(data.price),
+                    discount: data.discount || 0,
+                    image: data.image_url || '',
+                    store: data.store || '',
+                    storeUrl: data.store_url || '',
+                    category: data.category || 'Other',
+                    upvotes: 0,
+                    downvotes: 0,
+                    temperature: data.temperature || 0,
+                    createdAt: new Date(data.created_at ?? new Date().toISOString()),
+                    expiresAt: data.expires_at ? new Date(data.expires_at) : undefined,
+                    couponCode: data.coupon_code,
+                    shippingInfo: data.shipping_info,
+                    author: {
+                        username: data.author?.username || 'Anonymous',
+                        avatar: data.author?.avatar_url || '',
+                    },
+                    comments: (data.comments || []).map((c: { id: string; content: string; created_at: string; author?: { username?: string; avatar_url?: string } }) => ({
+                        id: c.id,
+                        content: c.content,
+                        createdAt: new Date(c.created_at ?? new Date().toISOString()),
+                        upvotes: 0,
+                        downvotes: 0,
+                        author: {
+                            username: c.author?.username || 'Anonymous',
+                            avatar: c.author?.avatar_url || '',
+                        },
+                    })),
+                });
+            } catch {
+                setFetchError(true);
+            } finally {
+                setFetchLoading(false);
+            }
+        };
+
+        fetchDeal();
+    }, [id, preloadedDeal]);
+
+    if (fetchLoading) {
+        return (
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+                <div className="animate-pulse">
+                    <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mx-auto mb-4"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/2 mx-auto"></div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!deal || fetchError) {
         return (
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Deal Not Found</h2>
@@ -39,6 +128,24 @@ export const DealPage = ({ deals }: DealPageProps) => {
         author,
         createdAt
     } = deal;
+
+    const handleShare = async () => {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: title,
+                    text: `Check out this deal: ${title}`,
+                    url: window.location.href,
+                });
+            } catch (err) {
+                console.error('Error sharing:', err);
+            }
+        } else {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link skopiowany do schowka!');
+        }
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -126,9 +233,12 @@ export const DealPage = ({ deals }: DealPageProps) => {
                                 <ExternalLink size={18} />
                             </a>
 
-                            <button className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-4 py-2 rounded-lg hover:bg-gray-200/50 dark:hover:bg-gray-700 transition-colors ml-auto">
+                            <button 
+                                onClick={handleShare}
+                                className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-4 py-2 rounded-lg hover:bg-gray-200/50 dark:hover:bg-gray-700 transition-colors ml-auto"
+                            >
                                 <Share2 size={20} />
-                                <span className="hidden sm:inline">Share</span>
+                                <span className="hidden sm:inline">Udostępnij</span>
                             </button>
                         </div>
 

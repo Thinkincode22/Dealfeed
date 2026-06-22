@@ -121,7 +121,7 @@ export const Header = () => {
                                         className="hidden sm:flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                                     >
                                         <Plus size={20} />
-                                        <span>Додати пропозицію</span>
+                                        <span>Dodaj ofertę</span>
                                     </Link>
                                     <Link
                                         to="/create-deal"
@@ -134,7 +134,7 @@ export const Header = () => {
                                             to="/admin"
                                             className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors border border-gray-200 dark:border-gray-700"
                                         >
-                                            Адмін-панель
+                                            Panel admina
                                         </Link>
                                     )}
                                 </>
@@ -149,7 +149,10 @@ export const Header = () => {
                                     {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
                                 </button>
                                 {isAuthenticated && (
-                                    <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors dark:text-gray-300 dark:hover:bg-gray-800">
+                                    <button 
+                                        className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors dark:text-gray-300 dark:hover:bg-gray-800"
+                                        title="Wkrótce"
+                                    >
                                         <Bell size={20} />
                                         <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                                     </button>
@@ -175,7 +178,7 @@ export const Header = () => {
                                     <button
                                         onClick={handleSignOut}
                                         className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors dark:text-gray-300 dark:hover:bg-gray-800"
-                                        title="Wyloguj się"
+                                        title="Wyloguj"
                                     >
                                         <LogOut size={20} />
                                     </button>

@@ -56,7 +56,7 @@ export const AdminPage = () => {
                             : 'border-transparent text-gray-500 hover:text-gray-700'
                     }`}
                 >
-                    Модерація
+                    Moderacja
                 </button>
                 {isAdmin && (
                     <button
@@ -67,7 +67,7 @@ export const AdminPage = () => {
                                 : 'border-transparent text-gray-500 hover:text-gray-700'
                         }`}
                     >
-                        Користувачі
+                        Użytkownicy
                     </button>
                 )}
             </div>
@@ -173,7 +173,14 @@ const UsersTab = () => {
 
     const updateRole = async (id: string, newRole: string) => {
         if (!supabase) return;
-        await supabase.from('profiles').update({ role: newRole }).eq('id', id);
+        const { error } = await supabase.rpc('update_user_role', {
+            target_user_id: id,
+            new_role: newRole,
+        });
+        if (error) {
+            console.error('Error updating role:', error.message);
+            return;
+        }
         setUsers(prev => prev.map(u => u.id === id ? { ...u, role: newRole } : u));
     };
 

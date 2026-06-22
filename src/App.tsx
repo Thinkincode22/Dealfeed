@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
-import { DealPost } from './components/DealPost';
-import { Modal } from './components/Modal';
-import { HomePage } from './components/HomePage';
-import { DealPage } from './components/DealPage';
-import { ProfilePage } from './components/ProfilePage';
+
+import { HomePage } from './pages/HomePage';
+import { DealPage } from './pages/DealPage';
+import { ProfilePage } from './pages/ProfilePage';
 import { CreateDealForm } from './components/CreateDealForm';
 import { AdminPage } from './pages/AdminPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -13,11 +12,10 @@ import { SearchProvider } from './contexts/SearchContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { useDeals } from './hooks/useDeals';
 import { supabase, isSupabaseConfigured } from './lib/supabase';
-import type { Deal } from './types/deal';
+
 
 function App() {
-  const { deals, loading, error, hasMore, loadMore, addDeal } = useDeals();
-  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const { deals, loading, error, hasMore, loadMore } = useDeals();
 
   useEffect(() => {
     if (isSupabaseConfigured && supabase) {
@@ -33,10 +31,7 @@ function App() {
     }
   }, []);
 
-  const handlePostDeal = async (newDeal: Omit<Deal, 'id' | 'temperature' | 'upvotes' | 'downvotes'>) => {
-    await addDeal(newDeal);
-    setIsPostModalOpen(false);
-  };
+
 
   return (
     <ErrorBoundary>
@@ -77,47 +72,27 @@ function App() {
 
               <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-16 transition-colors">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                       <h3 className="font-bold text-gray-900 dark:text-white mb-3">DealFeed</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Your community for finding and sharing the best deals online.
+                        Polska społeczność łowców okazji. Znajdź i udostępniaj najlepsze zniżki.
                       </p>
                     </div>
-                    <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white mb-3">Quick Links</h3>
-                      <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="#" className="hover:text-blue-600 dark:hover:text-blue-400">About Us</a></li>
-                        <li><a href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Contact</a></li>
-                        <li><a href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Blog</a></li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white mb-3">Support</h3>
-                      <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="#" className="hover:text-blue-600 dark:hover:text-blue-400">FAQ</a></li>
-                        <li><a href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Guidelines</a></li>
-                        <li><a href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Privacy Policy</a></li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white mb-3">Follow Us</h3>
-                      <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Twitter</a></li>
-                        <li><a href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Facebook</a></li>
-                        <li><a href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Instagram</a></li>
-                      </ul>
+                    <div className="md:text-right">
+                      <h3 className="font-bold text-gray-900 dark:text-white mb-3">Kontakt</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Masz pytania? <a href="mailto:kontakt@dealfeed.pl" className="text-blue-600 dark:text-blue-400 hover:underline">kontakt@dealfeed.pl</a>
+                      </p>
                     </div>
                   </div>
                   <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-8 text-center text-sm text-gray-600 dark:text-gray-400">
-                    &copy; {new Date().getFullYear()} DealFeed. All rights reserved.
+                    &copy; {new Date().getFullYear()} DealFeed. Wszelkie prawa zastrzeżone.
                   </div>
                 </div>
               </footer>
 
-              <Modal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)}>
-                <DealPost onSubmit={handlePostDeal} onClose={() => setIsPostModalOpen(false)} />
-              </Modal>
+
             </div>
           </Router>
         </SearchProvider>

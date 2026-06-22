@@ -40,7 +40,7 @@ export const CreateDealForm = () => {
         return (
             <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
                 <p className="text-gray-600 dark:text-gray-400">
-                    Увійдіть щоб додати пропозицію
+                    Zaloguj się, aby dodać ofertę
                 </p>
             </div>
         );
@@ -126,11 +126,11 @@ export const CreateDealForm = () => {
 
     return (
         <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 space-y-4 max-w-xl">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add a Deal</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Dodaj ofertę</h2>
 
             {status === 'success' && (
                 <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 text-sm text-green-800 dark:text-green-200">
-                    Deal submitted! It will appear after moderation.
+                    Oferta dodana! Pojawi się po weryfikacji.
                 </div>
             )}
             {status === 'error' && (
@@ -164,7 +164,7 @@ export const CreateDealForm = () => {
                 disabled={status === 'submitting'}
                 className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2.5 rounded-lg transition-colors"
             >
-                {status === 'submitting' ? 'Submitting...' : 'Submit Deal'}
+                {status === 'submitting' ? 'Dodawanie...' : 'Dodaj ofertę'}
             </button>
         </form>
     );
