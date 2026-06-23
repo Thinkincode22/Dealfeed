@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNotifications } from '../contexts/NotificationContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 interface VoteButtonsProps {
@@ -13,6 +14,7 @@ type VoteState = 'none' | 'up' | 'down';
 
 export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId }: VoteButtonsProps) => {
     const { user } = useAuth();
+    const { addNotification } = useNotifications();
     const [upvotes, setUpvotes] = useState(initialUpvotes);
     const [downvotes, setDownvotes] = useState(initialDownvotes);
     const [voteState, setVoteState] = useState<VoteState>('none');
@@ -99,6 +101,16 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId }: VoteBu
                             { onConflict: 'deal_id,user_id' }
                         );
                     if (error) throw error;
+                }
+
+                // Add notification for new votes (not when removing)
+                if (newValue !== 0) {
+                    addNotification({
+                        type: 'vote',
+                        title: 'New vote',
+                        message: `${user.profile?.username || 'Someone'} ${newValue === 1 ? 'upvoted' : 'downvoted'} a deal`,
+                        dealId,
+                    });
                 }
             } catch (err) {
                 console.error('Error persisting vote:', err);

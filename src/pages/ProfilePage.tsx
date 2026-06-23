@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, MapPin, Award, Package, Heart, Settings } from 'lucide-react';
 import type { Deal } from '../types/deal';
+import type { DBDealRow } from '../types/database';
+import { transformDBDealToDeal } from '../types/database';
 import { useAuth } from '../contexts/AuthContext';
 import { DealCard } from '../components/DealCard';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 interface ProfilePageProps {
     deals: Deal[];
@@ -11,8 +14,56 @@ interface ProfilePageProps {
 type Tab = 'my-deals' | 'saved' | 'settings';
 
 export const ProfilePage = ({ deals }: ProfilePageProps) => {
-    const { user, isAuthenticated } = useAuth();
+    const { user, isAuthenticated, updateProfile } = useAuth();
     const [activeTab, setActiveTab] = useState<Tab>('my-deals');
+    const [savedDeals, setSavedDeals] = useState<Deal[]>([]);
+    const [savedLoading, setSavedLoading] = useState(false);
+
+    // Edit profile form state
+    const [editUsername, setEditUsername] = useState('');
+    const [editBio, setEditBio] = useState('');
+    const [editLocation, setEditLocation] = useState('');
+    const [editAvatarUrl, setEditAvatarUrl] = useState('');
+    const [editSaving, setEditSaving] = useState(false);
+    const [editMessage, setEditMessage] = useState('');
+
+    useEffect(() => {
+        if (!isAuthenticated || !user || !isSupabaseConfigured || !supabase) return;
+
+        const fetchSaved = async () => {
+            setSavedLoading(true);
+            try {
+                const { data, error } = await supabase!
+                    .from('saved_deals')
+                    .select('deal_id, deals(*)')
+                    .eq('user_id', user.id);
+
+                if (error) throw error;
+
+                const transformed: Deal[] = (data || [])
+                    .map((row: any) => row.deals ? transformDBDealToDeal(row.deals) : null)
+                    .filter(Boolean) as Deal[];
+
+                setSavedDeals(transformed);
+            } catch (err) {
+                console.error('Error fetching saved deals:', err);
+            } finally {
+                setSavedLoading(false);
+            }
+        };
+
+        fetchSaved();
+    }, [isAuthenticated, user]);
+
+    // Initialize edit form from profile
+    useEffect(() => {
+        if (profile) {
+            setEditUsername(profile.username || '');
+            setEditBio(profile.bio || '');
+            setEditLocation(profile.location || '');
+            setEditAvatarUrl(profile.avatar || '');
+        }
+    }, [profile?.username, profile?.bio, profile?.location, profile?.avatar]);
 
     if (!isAuthenticated || !user) {
         return (
@@ -28,7 +79,6 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
 
     const profile = user.profile;
     const myDeals = deals.filter(d => d.author.username === profile?.username);
-    const savedDeals: Deal[] = []; // TODO: fetch from saved_deals table
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -50,7 +100,10 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                 {profile?.bio || 'No bio yet'}
                             </p>
                         </div>
-                        <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-gray-700 dark:text-gray-200 font-medium transition-colors">
+                        <button
+                            onClick={() => setActiveTab('settings')}
+                            className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-gray-700 dark:text-gray-200 font-medium transition-colors"
+                        >
                             <Settings size={18} />
                             <span>Edit Profile</span>
                         </button>
@@ -127,7 +180,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                 >
                     <div className="flex items-center gap-2">
                         <Heart size={18} />
-                        Zapisane <span className="text-xs text-gray-400">(Wkrótce)</span>
+                        Zapisane ({savedDeals.length})
                     </div>
                     {activeTab === 'saved' && (
                         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t-full"></div>
@@ -170,7 +223,14 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
 
                 {activeTab === 'saved' && (
                     <div className="max-w-4xl mx-auto space-y-4">
-                        {savedDeals.length > 0 ? (
+                        {savedLoading ? (
+                            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
+                                <div className="animate-pulse">
+                                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mx-auto mb-4"></div>
+                                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/2 mx-auto"></div>
+                                </div>
+                            </div>
+                        ) : savedDeals.length > 0 ? (
                             savedDeals.map(deal => (
                                 <DealCard key={deal.id} deal={deal} />
                             ))
@@ -178,16 +238,96 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                             <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
                                 <Heart size={48} className="mx-auto mb-4 text-gray-400" />
                                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Brak zapisanych okazji</h3>
-                                <p className="text-gray-500 dark:text-gray-400">Funkcja zapisywania okazji pojawi się wkrótce!</p>
+                                <p className="text-gray-500 dark:text-gray-400">Zapisz okazje, aby zobaczyć je tutaj!</p>
                             </div>
                         )}
                     </div>
                 )}
 
                 {activeTab === 'settings' && (
-                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center text-gray-500 dark:text-gray-400">
-                        <Settings size={48} className="mx-auto mb-4 opacity-50" />
-                        <h3 className="text-lg font-medium mb-2">Settings coming soon</h3>
+                    <div className="max-w-2xl mx-auto">
+                        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                                <Settings size={20} />
+                                Edit Profile
+                            </h3>
+
+                            <form onSubmit={async (e) => {
+                                e.preventDefault();
+                                setEditSaving(true);
+                                setEditMessage('');
+                                const { error } = await updateProfile({
+                                    username: editUsername,
+                                    bio: editBio,
+                                    location: editLocation,
+                                    avatar_url: editAvatarUrl,
+                                });
+                                setEditSaving(false);
+                                setEditMessage(error ? 'Failed to save changes.' : 'Profile updated!');
+                            }} className="space-y-5">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Username</label>
+                                    <input
+                                        type="text"
+                                        value={editUsername}
+                                        onChange={(e) => setEditUsername(e.target.value)}
+                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
+                                    <textarea
+                                        value={editBio}
+                                        onChange={(e) => setEditBio(e.target.value)}
+                                        rows={3}
+                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Location</label>
+                                    <input
+                                        type="text"
+                                        value={editLocation}
+                                        onChange={(e) => setEditLocation(e.target.value)}
+                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Avatar URL</label>
+                                    <input
+                                        type="url"
+                                        value={editAvatarUrl}
+                                        onChange={(e) => setEditAvatarUrl(e.target.value)}
+                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    />
+                                </div>
+
+                                {editAvatarUrl && (
+                                    <div className="flex items-center gap-4">
+                                        <img src={editAvatarUrl} alt="Avatar preview" className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 object-cover" />
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">Preview</span>
+                                    </div>
+                                )}
+
+                                <div className="flex items-center gap-4 pt-2">
+                                    <button
+                                        type="submit"
+                                        disabled={editSaving}
+                                        className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors"
+                                    >
+                                        {editSaving ? 'Saving...' : 'Save Changes'}
+                                    </button>
+                                    {editMessage && (
+                                        <span className={`text-sm ${editMessage.includes('Failed') ? 'text-red-600' : 'text-green-600'}`}>
+                                            {editMessage}
+                                        </span>
+                                    )}
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 )}
             </div>

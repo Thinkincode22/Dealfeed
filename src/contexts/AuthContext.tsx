@@ -19,6 +19,7 @@ interface AuthContextType {
     signOut: () => Promise<void>;
     signInWithGoogle: () => Promise<{ error: Error | null }>;
     resetPassword: (email: string) => Promise<{ error: Error | null }>;
+    updateProfile: (updates: { username?: string; bio?: string; location?: string; avatar_url?: string }) => Promise<{ error: Error | null }>;
     isAuthenticated: boolean;
 }
 
@@ -152,6 +153,54 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return { error: error ? new Error(error.message) : null };
     };
 
+    const updateProfile = async (updates: { username?: string; bio?: string; location?: string; avatar_url?: string }) => {
+        if (!supabase) {
+            // Mock mode — update local state only
+            if (user?.profile) {
+                setUser({
+                    ...user,
+                    profile: {
+                        ...user.profile,
+                        ...(updates.username !== undefined && { username: updates.username }),
+                        ...(updates.bio !== undefined && { bio: updates.bio }),
+                        ...(updates.location !== undefined && { location: updates.location }),
+                        ...(updates.avatar_url !== undefined && { avatar: updates.avatar_url }),
+                    },
+                });
+            }
+            return { error: null };
+        }
+
+        if (!user) return { error: new Error('Not authenticated') };
+
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .update(updates)
+                .eq('id', user.id);
+
+            if (error) throw error;
+
+            // Update local state
+            if (user.profile) {
+                setUser({
+                    ...user,
+                    profile: {
+                        ...user.profile,
+                        ...(updates.username !== undefined && { username: updates.username }),
+                        ...(updates.bio !== undefined && { bio: updates.bio }),
+                        ...(updates.location !== undefined && { location: updates.location }),
+                        ...(updates.avatar_url !== undefined && { avatar: updates.avatar_url }),
+                    },
+                });
+            }
+
+            return { error: null };
+        } catch (err) {
+            return { error: err instanceof Error ? err : new Error('Failed to update profile') };
+        }
+    };
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -161,6 +210,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             signOut,
             signInWithGoogle,
             resetPassword,
+            updateProfile,
             isAuthenticated: !!user,
         }}>
             {children}

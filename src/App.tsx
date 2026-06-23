@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Header } from './components/Header';
 
-import { HomePage } from './pages/HomePage';
-import { DealPage } from './pages/DealPage';
-import { ProfilePage } from './pages/ProfilePage';
-import { CreateDealForm } from './components/CreateDealForm';
-import { AdminPage } from './pages/AdminPage';
+const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
+const DealPage = lazy(() => import('./pages/DealPage').then(m => ({ default: m.DealPage })));
+const ProfilePage = lazy(() => import('./pages/ProfilePage').then(m => ({ default: m.ProfilePage })));
+const CreateDealForm = lazy(() => import('./components/CreateDealForm').then(m => ({ default: m.CreateDealForm })));
+const AdminPage = lazy(() => import('./pages/AdminPage').then(m => ({ default: m.AdminPage })));
+
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { SearchProvider } from './contexts/SearchContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -53,7 +54,15 @@ function App() {
                 </div>
               )}
 
-              <Routes>
+              <Suspense fallback={
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+                  <div className="animate-pulse">
+                    <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mx-auto mb-4"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/2 mx-auto"></div>
+                  </div>
+                </div>
+              }>
+                <Routes>
                 <Route path="/" element={<HomePage deals={deals} hasMore={hasMore} onLoadMore={loadMore} loading={loading} />} />
                 <Route path="/deal/:id" element={<DealPage deals={deals} />} />
                 <Route path="/profile" element={<ProtectedRoute><ProfilePage deals={deals} /></ProtectedRoute>} />
@@ -74,7 +83,8 @@ function App() {
                     </a>
                   </div>
                 } />
-              </Routes>
+                </Routes>
+              </Suspense>
 
               <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-16 transition-colors">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

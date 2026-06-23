@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, Bell, Plus, Zap, Sun, Moon, LogIn, LogOut, User } from 'lucide-react';
+import { Search, Plus, Zap, Sun, Moon, LogIn, LogOut, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSearch } from '../contexts/SearchContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useUserRole } from '../hooks/useUserRole';
 import { AuthModal } from './AuthModal';
+import { NotificationDropdown } from './NotificationDropdown';
 
 type NavItem = 'hot' | 'new' | 'discussed';
 
@@ -149,13 +150,7 @@ export const Header = () => {
                                     {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
                                 </button>
                                 {isAuthenticated && (
-                                    <button 
-                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors dark:text-gray-300 dark:hover:bg-gray-800"
-                                        title="Coming soon"
-                                        aria-label="Coming soon"
-                                    >
-                                        <Bell size={20} />
-                                    </button>
+                                    <NotificationDropdown />
                                 )}
                             </div>
 

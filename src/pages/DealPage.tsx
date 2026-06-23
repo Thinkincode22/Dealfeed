@@ -5,6 +5,7 @@ import { VoteButtons } from '../components/VoteButtons';
 import { CommentsSection } from '../components/CommentsSection';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import type { Deal } from '../types/deal';
+import { transformDBDealToDeal } from '../types/database';
 
 interface DealPageProps {
     deals: Deal[];
@@ -47,40 +48,7 @@ export const DealPage = ({ deals }: DealPageProps) => {
                     return;
                 }
 
-                setFetchedDeal({
-                    id: data.id,
-                    title: data.title,
-                    description: data.description || '',
-                    price: Number(data.price),
-                    originalPrice: Number(data.original_price) || Number(data.price),
-                    discount: data.discount || 0,
-                    image: data.image_url || '',
-                    store: data.store || '',
-                    storeUrl: data.store_url || '',
-                    category: data.category || 'Other',
-                    upvotes: 0,
-                    downvotes: 0,
-                    temperature: data.temperature || 0,
-                    createdAt: new Date(data.created_at ?? new Date().toISOString()),
-                    expiresAt: data.expires_at ? new Date(data.expires_at) : undefined,
-                    couponCode: data.coupon_code,
-                    shippingInfo: data.shipping_info,
-                    author: {
-                        username: data.author?.username || 'Anonymous',
-                        avatar: data.author?.avatar_url || '',
-                    },
-                    comments: (data.comments || []).map((c: { id: string; content: string; created_at: string; author?: { username?: string; avatar_url?: string } }) => ({
-                        id: c.id,
-                        content: c.content,
-                        createdAt: new Date(c.created_at ?? new Date().toISOString()),
-                        upvotes: 0,
-                        downvotes: 0,
-                        author: {
-                            username: c.author?.username || 'Anonymous',
-                            avatar: c.author?.avatar_url || '',
-                        },
-                    })),
-                });
+                setFetchedDeal(transformDBDealToDeal(data));
             } catch {
                 setFetchError(true);
             } finally {

@@ -1,37 +1,13 @@
-/**
- * Shared DB row types used across hooks and components.
- * Matches the Supabase query shapes for deals and comments.
- */
+# Dealfeed Improvement Plan
 
+## C: Shared Transform Utility
+
+### Step 1: Add to `src/types/database.ts`
+
+Add import and export function:
+
+```ts
 import type { Deal } from './deal';
-
-export type DBCommentRow = {
-    id: string;
-    content: string;
-    created_at: string;
-    author?: { username?: string; avatar_url?: string };
-};
-
-export type DBDealRow = {
-    id: string;
-    title: string;
-    description?: string;
-    price: number;
-    original_price?: number;
-    discount?: number;
-    image_url?: string;
-    store?: string;
-    store_url?: string;
-    category?: string;
-    temperature?: number;
-    created_at?: string;
-    expires_at?: string;
-    coupon_code?: string;
-    shipping_info?: string;
-    is_active?: boolean;
-    author?: { username?: string; avatar_url?: string };
-    comments?: DBCommentRow[];
-};
 
 export const transformDBDealToDeal = (deal: DBDealRow): Deal => ({
     id: deal.id,
@@ -67,3 +43,31 @@ export const transformDBDealToDeal = (deal: DBDealRow): Deal => ({
         },
     })),
 });
+```
+
+### Step 2: Update `src/hooks/useDeals.ts`
+
+- Add import: `import { transformDBDealToDeal } from '../types/database';`
+- Remove `transformDeals` function (lines 26-61)
+- Replace `transformDeals(data || [])` with `(data || []).map(transformDBDealToDeal)`
+
+### Step 3: Update `src/pages/DealPage.tsx`
+
+- Add import: `import { transformDBDealToDeal } from '../types/database';`
+- Replace lines 50-83 with: `setFetchedDeal(transformDBDealToDeal(data));`
+
+### Step 4: Update `src/pages/ProfilePage.tsx`
+
+- Add import: `import { transformDBDealToDeal } from '../types/database';`
+- Replace lines 34-71 with:
+```ts
+const transformed: Deal[] = (data || [])
+    .map((row: any) => row.deals ? transformDBDealToDeal(row.deals) : null)
+    .filter(Boolean) as Deal[];
+```
+
+### Step 5: Type-check
+
+```bash
+npx tsc --noEmit
+```

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { DBCommentRow, DBDealRow } from '../types/database';
+import type { DBDealRow } from '../types/database';
+import { transformDBDealToDeal } from '../types/database';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { mockDeals } from '../data/mockDeals';
 import type { Deal } from '../types/deal';
@@ -22,43 +23,6 @@ export const useDeals = (): UseDealsResult => {
     const [error, setError] = useState<string | null>(null);
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(0);
-
-    const transformDeals = (data: DBDealRow[]): Deal[] => {
-        return (data || []).map((deal: DBDealRow) => ({
-            id: deal.id,
-            title: deal.title,
-            description: deal.description || '',
-            price: Number(deal.price),
-            originalPrice: Number(deal.original_price) || Number(deal.price),
-            discount: deal.discount || 0,
-            image: deal.image_url || '',
-            store: deal.store || '',
-            storeUrl: deal.store_url || '',
-            category: deal.category || 'Other',
-            upvotes: 0,
-            downvotes: 0,
-            temperature: deal.temperature || 0,
-            createdAt: new Date(deal.created_at ?? new Date().toISOString()),
-            expiresAt: deal.expires_at ? new Date(deal.expires_at) : undefined,
-            couponCode: deal.coupon_code,
-            shippingInfo: deal.shipping_info,
-            author: {
-                username: deal.author?.username || 'Anonymous',
-                avatar: deal.author?.avatar_url || ''
-            },
-            comments: (deal.comments || []).map((comment: DBCommentRow) => ({
-                id: comment.id,
-                content: comment.content,
-                createdAt: new Date(comment.created_at ?? new Date().toISOString()),
-                upvotes: 0,
-                downvotes: 0,
-                author: {
-                    username: comment.author?.username || 'Anonymous',
-                    avatar: comment.author?.avatar_url || ''
-                }
-            }))
-        }));
-    };
 
     const fetchDeals = async () => {
         if (!isSupabaseConfigured || !supabase) {
@@ -92,7 +56,7 @@ export const useDeals = (): UseDealsResult => {
 
             if (fetchError) throw fetchError;
 
-            const transformed = transformDeals(data || []);
+            const transformed = (data || []).map(transformDBDealToDeal);
             setDeals(transformed);
             setHasMore((data || []).length === PAGE_SIZE);
             setPage(0);
@@ -131,7 +95,7 @@ export const useDeals = (): UseDealsResult => {
 
             if (fetchError) throw fetchError;
 
-            const transformed = transformDeals(data || []);
+            const transformed = (data || []).map(transformDBDealToDeal);
             setDeals(prev => [...prev, ...transformed]);
             setHasMore((data || []).length === PAGE_SIZE);
             setPage(nextPage);

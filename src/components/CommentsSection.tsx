@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MessageCircle, Send } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNotifications } from '../contexts/NotificationContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import type { Comment } from '../types/deal';
 import type { DBCommentRow } from '../types/database';
@@ -12,6 +13,7 @@ interface CommentsSectionProps {
 
 export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProps) => {
     const { user, isAuthenticated } = useAuth();
+    const { addNotification } = useNotifications();
     const [comments, setComments] = useState<Comment[]>(initialComments);
     const [newComment, setNewComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -84,6 +86,12 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
 
                 setComments(prev => [comment, ...prev]);
                 setNewComment('');
+                addNotification({
+                    type: 'comment',
+                    title: 'New comment',
+                    message: `${user.profile?.username || 'Someone'} commented on a deal`,
+                    dealId,
+                });
             } catch (err) {
                 console.error('Error posting comment:', err);
                 setSubmitError('Failed to post comment. Please try again.');
@@ -107,6 +115,12 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
             setComments(prev => [comment, ...prev]);
             setNewComment('');
             setIsSubmitting(false);
+            addNotification({
+                type: 'comment',
+                title: 'New comment',
+                message: `${user.profile?.username || 'Someone'} commented on a deal`,
+                dealId,
+            });
         } else {
             setSubmitError('Please sign in to comment.');
             setIsSubmitting(false);
