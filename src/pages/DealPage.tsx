@@ -28,7 +28,8 @@ export const DealPage = ({ deals }: DealPageProps) => {
             setFetchLoading(true);
             setFetchError(false);
             try {
-                const { data, error } = await supabase
+                const client = supabase!;
+                const { data, error } = await client
                     .from('deals')
                     .select(`
                         *,
