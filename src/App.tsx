@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Header } from './components/Header';
 
 import { HomePage } from './pages/HomePage';
@@ -9,10 +9,14 @@ import { CreateDealForm } from './components/CreateDealForm';
 import { AdminPage } from './pages/AdminPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { SearchProvider } from './contexts/SearchContext';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { useDeals } from './hooks/useDeals';
 import { supabase, isSupabaseConfigured } from './lib/supabase';
 
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/" replace />;
+}
 
 function App() {
   const { deals, loading, error, hasMore, loadMore } = useDeals();
@@ -52,11 +56,13 @@ function App() {
               <Routes>
                 <Route path="/" element={<HomePage deals={deals} hasMore={hasMore} onLoadMore={loadMore} loading={loading} />} />
                 <Route path="/deal/:id" element={<DealPage deals={deals} />} />
-                <Route path="/profile" element={<ProfilePage deals={deals} />} />
+                <Route path="/profile" element={<ProtectedRoute><ProfilePage deals={deals} /></ProtectedRoute>} />
                 <Route path="/create-deal" element={
-                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <CreateDealForm />
-                  </div>
+                  <ProtectedRoute>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                      <CreateDealForm />
+                    </div>
+                  </ProtectedRoute>
                 } />
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="*" element={

@@ -187,8 +187,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                 {activeTab === 'settings' && (
                     <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center text-gray-500 dark:text-gray-400">
                         <Settings size={48} className="mx-auto mb-4 opacity-50" />
-                        <h3 className="text-lg font-medium mb-2">Panel Ustawień</h3>
-                        <p>Opcje konta będą dostępne wkrótce.</p>
+                        <h3 className="text-lg font-medium mb-2">Settings coming soon</h3>
                     </div>
                 )}
             </div>

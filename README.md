@@ -56,7 +56,8 @@ Execute the SQL migrations from the `supabase/migrations/` folder in order:
 2. `002_rbac_schema.sql`
 3. `003_secure_policies.sql`
 4. `004_deal_status_and_constraints.sql`
-5. `005_secure_role_update.sql`
+
+> **Note:** The first `super_admin` user must be set manually via the Supabase SQL editor (e.g. `UPDATE profiles SET role = 'super_admin' WHERE id = '<your-user-id>';`).
 
 ### 5. Run the application
 ```bash

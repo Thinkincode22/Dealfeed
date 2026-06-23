@@ -47,7 +47,7 @@ export const Sidebar = () => {
                 <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">
                     Społeczność do znajdowania i dzielenia się najlepszymi okazjami. Dołącz do nas, aby oszczędzać i dzielić się znaleziskami.
                 </p>
-                <button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors">
+                <button disabled className="w-full bg-gray-900 text-white font-medium py-3 px-4 rounded-lg transition-colors opacity-50 cursor-not-allowed">
                     Dołącz do Społeczności
                 </button>
             </div>
@@ -61,17 +61,17 @@ export const Sidebar = () => {
                     <StatItem
                         icon={<Users size={18} />}
                         label="Active Members"
-                        value="12,543"
+                        value="—"
                     />
                     <StatItem
                         icon={<TrendingUp size={18} />}
                         label="Deals Today"
-                        value="234"
+                        value="—"
                     />
                     <StatItem
                         icon={<Award size={18} />}
                         label="Money Saved"
-                        value="$2.4M"
+                        value="—"
                     />
                 </div>
             </div>

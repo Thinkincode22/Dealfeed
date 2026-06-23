@@ -150,11 +150,11 @@ export const Header = () => {
                                 </button>
                                 {isAuthenticated && (
                                     <button 
-                                        className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors dark:text-gray-300 dark:hover:bg-gray-800"
-                                        title="Wkrótce"
+                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors dark:text-gray-300 dark:hover:bg-gray-800"
+                                        title="Coming soon"
+                                        aria-label="Coming soon"
                                     >
                                         <Bell size={20} />
-                                        <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                                     </button>
                                 )}
                             </div>
