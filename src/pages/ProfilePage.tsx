@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Calendar, MapPin, Award, Package, Heart, Settings } from 'lucide-react';
 import type { Deal } from '../types/deal';
-import type { DBDealRow } from '../types/database';
 import { transformDBDealToDeal } from '../types/database';
 import { useAuth } from '../contexts/AuthContext';
 import { DealCard } from '../components/DealCard';
@@ -55,6 +54,8 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
         fetchSaved();
     }, [isAuthenticated, user]);
 
+    const profile = user?.profile;
+
     // Initialize edit form from profile
     useEffect(() => {
         if (profile) {
@@ -76,8 +77,6 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
             </div>
         );
     }
-
-    const profile = user.profile;
     const myDeals = deals.filter(d => d.author.username === profile?.username);
 
     return (

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { DBDealRow } from '../types/database';
 import { transformDBDealToDeal } from '../types/database';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { mockDeals } from '../data/mockDeals';
