@@ -5,6 +5,7 @@ import { transformDBDealToDeal } from '../types/database';
 import { useAuth } from '../contexts/AuthContext';
 import { DealCard } from '../components/DealCard';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { sanitizeUrl } from '../lib/sanitize';
 
 interface ProfilePageProps {
     deals: Deal[];
@@ -39,8 +40,9 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
 
                 if (error) throw error;
 
-                const transformed: Deal[] = (data || [])
-                    .map((row: any) => row.deals ? transformDBDealToDeal(row.deals) : null)
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const transformed: Deal[] = (data as any[] || [])
+                    .map((row) => row.deals ? transformDBDealToDeal(row.deals) : null)
                     .filter(Boolean) as Deal[];
 
                 setSavedDeals(transformed);
@@ -55,6 +57,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
     }, [isAuthenticated, user]);
 
     const profile = user?.profile;
+    const safeAvatarUrl = sanitizeUrl(profile?.avatar) || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id}`;
 
     // Initialize edit form from profile
     useEffect(() => {
@@ -64,6 +67,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
             setEditLocation(profile.location || '');
             setEditAvatarUrl(profile.avatar || '');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- profile object is recreated every render; use individual properties to avoid infinite loop
     }, [profile?.username, profile?.bio, profile?.location, profile?.avatar]);
 
     if (!isAuthenticated || !user) {
@@ -87,7 +91,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                 <div className="px-8 pb-8">
                     <div className="relative flex items-end -mt-12 mb-6">
                         <img
-                            src={profile?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`}
+                            src={safeAvatarUrl}
                             alt={profile?.username || 'User'}
                             className="w-32 h-32 rounded-full border-4 border-white dark:border-gray-900 bg-white dark:bg-gray-800"
                         />
@@ -270,6 +274,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                         type="text"
                                         value={editUsername}
                                         onChange={(e) => setEditUsername(e.target.value)}
+                                        maxLength={30}
                                         className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     />
                                 </div>
@@ -280,6 +285,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                         value={editBio}
                                         onChange={(e) => setEditBio(e.target.value)}
                                         rows={3}
+                                        maxLength={200}
                                         className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all"
                                     />
                                 </div>
@@ -290,6 +296,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                         type="text"
                                         value={editLocation}
                                         onChange={(e) => setEditLocation(e.target.value)}
+                                        maxLength={100}
                                         className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     />
                                 </div>

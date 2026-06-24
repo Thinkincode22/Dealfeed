@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { transformDBDealToDeal } from '../types/database';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { mockDeals } from '../data/mockDeals';
@@ -21,9 +21,11 @@ export const useDeals = (): UseDealsResult => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [hasMore, setHasMore] = useState(true);
-    const [page, setPage] = useState(0);
+    const pageRef = useRef(0);
+    const loadingRef = useRef(false);
+    const abortRef = useRef<AbortController | null>(null);
 
-    const fetchDeals = async () => {
+    const fetchDeals = async (signal?: AbortSignal) => {
         if (!isSupabaseConfigured || !supabase) {
             setDeals(mockDeals);
             setLoading(false);
@@ -33,6 +35,7 @@ export const useDeals = (): UseDealsResult => {
 
         try {
             setLoading(true);
+            loadingRef.current = true;
             setError(null);
 
             const from = 0;
@@ -42,11 +45,8 @@ export const useDeals = (): UseDealsResult => {
                 .from('deals')
                 .select(`
                     *,
-                    author:profiles(*),
-                    comments(
-                        *,
-                        author:profiles(*)
-                    )
+                    author:profiles(username, avatar_url),
+                    comments(id)
                 `)
                 .eq('is_active', true)
                 .eq('status', 'approved')
@@ -54,26 +54,30 @@ export const useDeals = (): UseDealsResult => {
                 .range(from, to);
 
             if (fetchError) throw fetchError;
+            if (signal?.aborted) return;
 
             const transformed = (data || []).map(transformDBDealToDeal);
             setDeals(transformed);
             setHasMore((data || []).length === PAGE_SIZE);
-            setPage(0);
+            pageRef.current = 0;
         } catch (err) {
+            if (signal?.aborted) return;
             console.error('Error fetching deals:', err);
             setError(err instanceof Error ? err.message : 'Failed to fetch deals');
             setDeals(mockDeals);
         } finally {
             setLoading(false);
+            loadingRef.current = false;
         }
     };
 
     const loadMore = useCallback(async () => {
-        if (!isSupabaseConfigured || !supabase || !hasMore || loading) return;
+        if (!isSupabaseConfigured || !supabase || !hasMore || loadingRef.current) return;
 
         try {
             setLoading(true);
-            const nextPage = page + 1;
+            loadingRef.current = true;
+            const nextPage = pageRef.current + 1;
             const from = nextPage * PAGE_SIZE;
             const to = from + PAGE_SIZE - 1;
 
@@ -81,11 +85,8 @@ export const useDeals = (): UseDealsResult => {
                 .from('deals')
                 .select(`
                     *,
-                    author:profiles(*),
-                    comments(
-                        *,
-                        author:profiles(*)
-                    )
+                    author:profiles(username, avatar_url),
+                    comments(id)
                 `)
                 .eq('is_active', true)
                 .eq('status', 'approved')
@@ -97,17 +98,22 @@ export const useDeals = (): UseDealsResult => {
             const transformed = (data || []).map(transformDBDealToDeal);
             setDeals(prev => [...prev, ...transformed]);
             setHasMore((data || []).length === PAGE_SIZE);
-            setPage(nextPage);
+            pageRef.current = nextPage;
         } catch (err) {
             console.error('Error loading more deals:', err);
         } finally {
             setLoading(false);
+            loadingRef.current = false;
         }
-    }, [page, hasMore, loading]);
+    }, [hasMore]);
 
     useEffect(() => {
-        fetchDeals();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        const controller = new AbortController();
+        abortRef.current = controller;
+        fetchDeals(controller.signal);
+        return () => {
+            controller.abort();
+        };
     }, []);
 
     const addDeal = async (newDeal: Omit<Deal, 'id' | 'temperature' | 'upvotes' | 'downvotes'>) => {
@@ -121,6 +127,7 @@ export const useDeals = (): UseDealsResult => {
 
         if (isSupabaseConfigured && supabase) {
             try {
+                const { data: { user } } = await supabase.auth.getUser();
                 const { error } = await supabase.from('deals').insert({
                     title: newDeal.title,
                     description: newDeal.description,
@@ -134,6 +141,7 @@ export const useDeals = (): UseDealsResult => {
                     coupon_code: newDeal.couponCode,
                     shipping_info: newDeal.shippingInfo,
                     expires_at: newDeal.expiresAt,
+                    author_id: user?.id,
                 });
 
                 if (error) throw error;

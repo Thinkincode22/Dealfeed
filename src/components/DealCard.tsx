@@ -1,6 +1,7 @@
 import { MessageCircle, ExternalLink, Flame, Store } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { VoteButtons } from './VoteButtons';
+import { sanitizeUrl } from '../lib/sanitize';
 import type { Deal } from '../types/deal';
 
 interface DealCardProps {
@@ -33,6 +34,9 @@ export const DealCard = ({ deal }: DealCardProps) => {
         return 'text-gray-500';
     };
 
+    const safeImageUrl = sanitizeUrl(image) || 'https://via.placeholder.com/300x300?text=No+Image';
+    const safeStoreUrl = sanitizeUrl(storeUrl) || '#';
+
     return (
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-gray-800 p-4">
             <div className="flex flex-col sm:flex-row gap-4">
@@ -51,7 +55,7 @@ export const DealCard = ({ deal }: DealCardProps) => {
                     <div className="flex-shrink-0">
                         <Link to={`/deal/${id}`} className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden bg-gray-100 block">
                             <img
-                                src={image}
+                                src={safeImageUrl}
                                 alt={title}
                                 loading="lazy"
                                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -116,7 +120,7 @@ export const DealCard = ({ deal }: DealCardProps) => {
                                 </Link>
 
                                 <a
-                                    href={storeUrl}
+                                    href={safeStoreUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors text-sm"
@@ -136,7 +140,7 @@ export const DealCard = ({ deal }: DealCardProps) => {
                         <span>{comments.length} Comments</span>
                     </Link>
                     <a
-                        href={storeUrl}
+                        href={safeStoreUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex-1 bg-blue-600 text-white py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm"

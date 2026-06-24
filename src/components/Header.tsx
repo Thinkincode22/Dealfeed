@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useUserRole } from '../hooks/useUserRole';
 import { AuthModal } from './AuthModal';
 import { NotificationDropdown } from './NotificationDropdown';
+import { sanitizeUrl } from '../lib/sanitize';
 
 type NavItem = 'hot' | 'new' | 'discussed';
 
@@ -162,7 +163,7 @@ export const Header = () => {
                                         className="flex items-center gap-2 pl-2 pr-4 py-1.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors border border-gray-200 dark:border-gray-700"
                                     >
                                         <img
-                                            src={user?.profile?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id}`}
+                                            src={sanitizeUrl(user?.profile?.avatar) || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id}`}
                                             alt={user?.profile?.username || 'User'}
                                             className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700"
                                         />

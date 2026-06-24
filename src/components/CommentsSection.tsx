@@ -142,6 +142,7 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
                             placeholder="What do you think about this deal?"
+                            maxLength={1000}
                             className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-4 pr-12 h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
                         />
                         <button

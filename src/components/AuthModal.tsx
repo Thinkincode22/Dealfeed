@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff, AlertCircle, Loader2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -20,6 +20,15 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'login' }: AuthModalP
     const [successMessage, setSuccessMessage] = useState('');
 
     const { signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
+
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+    }, [isOpen, onClose]);
 
     // Reset to initial mode when modal opens
     if (!isOpen) return null;

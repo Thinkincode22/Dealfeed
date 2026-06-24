@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink, Store, Clock, Share2 } from 'lucide-react';
 import { VoteButtons } from '../components/VoteButtons';
 import { CommentsSection } from '../components/CommentsSection';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { sanitizeUrl } from '../lib/sanitize';
 import type { Deal } from '../types/deal';
 import { transformDBDealToDeal } from '../types/database';
 
@@ -98,6 +99,9 @@ export const DealPage = ({ deals }: DealPageProps) => {
         createdAt
     } = deal;
 
+    const safeImageUrl = sanitizeUrl(image) || 'https://via.placeholder.com/600x600?text=No+Image';
+    const safeStoreUrl = sanitizeUrl(storeUrl) || '#';
+
     const handleShare = async () => {
         if (navigator.share) {
             try {
@@ -129,7 +133,7 @@ export const DealPage = ({ deals }: DealPageProps) => {
                     <div className="p-6 lg:border-r border-gray-200 dark:border-gray-800 flex items-center justify-center bg-gray-50 dark:bg-gray-800/50">
                         <div className="relative w-full max-w-sm aspect-square">
                             <img
-                                src={image}
+                                src={safeImageUrl}
                                 alt={title}
                                 loading="lazy"
                                 className="w-full h-full object-contain mix-blend-multiply"
@@ -193,7 +197,7 @@ export const DealPage = ({ deals }: DealPageProps) => {
                             <div className="w-px h-8 bg-gray-200 dark:bg-gray-700 mx-2 hidden sm:block"></div>
 
                             <a
-                                href={storeUrl}
+                                href={safeStoreUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex-1 sm:flex-none justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors shadow-sm"

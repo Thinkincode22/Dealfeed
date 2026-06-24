@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { DealCard } from './DealCard';
 import type { Deal, SortOption } from '../types/deal';
 import { ChevronDown } from 'lucide-react';
@@ -15,23 +16,18 @@ export const DealList = ({ deals, hasMore, onLoadMore, loading }: DealListProps)
     const { sortBy, setSortBy } = useSearch();
     const filteredDeals = useFilteredDeals(deals);
 
-    // Сортуємо deals
-    const sortedDeals = [...filteredDeals].sort((a, b) => {
-        switch (sortBy) {
-            case 'hot':
-                return b.temperature - a.temperature;
-            case 'new':
-                return b.createdAt.getTime() - a.createdAt.getTime();
-            case 'discount':
-                return b.discount - a.discount;
-            case 'price-low':
-                return a.price - b.price;
-            case 'price-high':
-                return b.price - a.price;
-            default:
-                return 0;
-        }
-    });
+    const sortedDeals = useMemo(() => {
+        return [...filteredDeals].sort((a, b) => {
+            switch (sortBy) {
+                case 'hot': return b.temperature - a.temperature;
+                case 'new': return b.createdAt.getTime() - a.createdAt.getTime();
+                case 'discount': return b.discount - a.discount;
+                case 'price-low': return a.price - b.price;
+                case 'price-high': return b.price - a.price;
+                default: return 0;
+            }
+        });
+    }, [filteredDeals, sortBy]);
 
     return (
         <div className="space-y-6">

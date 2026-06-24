@@ -139,7 +139,9 @@ describe('transformDBDealToDeal', () => {
     it('handles numeric string price', () => {
         const dealWithStringPrice: DBDealRow = {
             ...baseDeal,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             price: '199.99' as any,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             original_price: '299.99' as any,
         };
 
