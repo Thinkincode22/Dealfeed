@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUserRole } from '../hooks/useUserRole';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { Shield, Check, X, LayoutDashboard, Users, ClipboardList, TrendingUp, Package, UserCheck, Trash2, EyeOff, Pencil } from 'lucide-react';
+import { Shield, Check, X, LayoutDashboard, Users, ClipboardList, TrendingUp, Package, Trash2, Pencil } from 'lucide-react';
 
 type Tab = 'dashboard' | 'moderation' | 'all-deals' | 'users';
 
@@ -16,7 +16,10 @@ interface PendingDeal {
     category: string;
     price: number;
     original_price: number;
+    discount: number;
     image_url: string | null;
+    status?: 'pending' | 'approved' | 'rejected';
+    is_active?: boolean;
     created_at: string;
     author?: { username?: string };
 }
@@ -217,15 +220,6 @@ const ModerationTab = () => {
             return;
         }
         setDeals(prev => prev.filter(d => d.id !== id));
-    };
-
-    const deactivateDeal = async (id: string) => {
-        if (!supabase) return;
-        const { error } = await supabase.from('deals').update({ is_active: false }).eq('id', id);
-        if (error) {
-            alert('Error deactivating deal: ' + error.message);
-            return;
-        }
     };
 
     const saveDeal = async (updated: PendingDeal) => {
