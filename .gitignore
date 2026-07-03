@@ -27,4 +27,4 @@ dist-ssr
 *.sln
 *.sw?
 .STRUCTURE.md
-SESSION_SUMMARY.md
+session-summaries/
