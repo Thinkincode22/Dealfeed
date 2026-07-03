@@ -16,7 +16,7 @@ interface PendingDeal {
     category: string;
     price: number;
     original_price: number;
-    discount: number;
+    discount?: number;
     image_url: string | null;
     status?: 'pending' | 'approved' | 'rejected';
     is_active?: boolean;
@@ -343,9 +343,10 @@ interface AllDeal {
     category: string;
     price: number;
     original_price: number;
+    discount?: number;
     image_url: string | null;
-    status: 'pending' | 'approved' | 'rejected';
-    is_active: boolean;
+    status?: 'pending' | 'approved' | 'rejected';
+    is_active?: boolean;
     created_at: string;
     author?: { username?: string };
 }
@@ -495,10 +496,10 @@ const AllDealsTab = () => {
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-500">{deal.category}</td>
                                     <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{deal.price} zł</td>
-                                    <td className="px-6 py-4">{statusBadge(deal.status)}</td>
+                                    <td className="px-6 py-4">{statusBadge(deal.status || 'pending')}</td>
                                     <td className="px-6 py-4">
                                         <button
-                                            onClick={() => toggleActive(deal.id, deal.is_active)}
+                                            onClick={() => toggleActive(deal.id, deal.is_active ?? true)}
                                             className={`w-10 h-5 rounded-full transition-colors relative ${
                                                 deal.is_active ? 'bg-green-500' : 'bg-gray-300'
                                             }`}
