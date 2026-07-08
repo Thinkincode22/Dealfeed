@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, Plus, Zap, Sun, Moon, LogIn, LogOut, User } from 'lucide-react';
+import { Search, Plus, Shield, Zap, Sun, Moon, LogIn, LogOut, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSearch } from '../contexts/SearchContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -132,12 +132,20 @@ export const Header = () => {
                                         <Plus size={20} />
                                     </Link>
                                     {canModerate && (
-                                        <Link
-                                            to="/admin"
-                                            className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors border border-gray-200 dark:border-gray-700"
-                                        >
-                                            Panel admina
-                                        </Link>
+                                        <>
+                                            <Link
+                                                to="/admin"
+                                                className="sm:hidden p-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                                            >
+                                                <Shield size={20} />
+                                            </Link>
+                                            <Link
+                                                to="/admin"
+                                                className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors border border-gray-200 dark:border-gray-700"
+                                            >
+                                                Panel admina
+                                            </Link>
+                                        </>
                                     )}
                                 </>
                             )}

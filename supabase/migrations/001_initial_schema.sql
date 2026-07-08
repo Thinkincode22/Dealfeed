@@ -11,7 +11,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Profiles table (extends Supabase auth.users)
-CREATE TABLE profiles (
+CREATE TABLE IF NOT EXISTS profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     username TEXT UNIQUE NOT NULL,
     avatar_url TEXT,
@@ -22,7 +22,7 @@ CREATE TABLE profiles (
 );
 
 -- Deals table
-CREATE TABLE deals (
+CREATE TABLE IF NOT EXISTS deals (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     author_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
     title TEXT NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE deals (
 );
 
 -- Comments table
-CREATE TABLE comments (
+CREATE TABLE IF NOT EXISTS comments (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     deal_id UUID REFERENCES deals(id) ON DELETE CASCADE,
     author_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
@@ -51,7 +51,7 @@ CREATE TABLE comments (
 );
 
 -- Votes table (for upvotes/downvotes)
-CREATE TABLE votes (
+CREATE TABLE IF NOT EXISTS votes (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     deal_id UUID REFERENCES deals(id) ON DELETE CASCADE,
     user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
@@ -61,7 +61,7 @@ CREATE TABLE votes (
 );
 
 -- Saved deals (bookmarks)
-CREATE TABLE saved_deals (
+CREATE TABLE IF NOT EXISTS saved_deals (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     deal_id UUID REFERENCES deals(id) ON DELETE CASCADE,
     user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
