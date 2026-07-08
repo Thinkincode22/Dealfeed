@@ -9,16 +9,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- ============================================
 -- 1. PROFILES TABLE (with roles)
 -- ============================================
-CREATE TABLE profiles (
-    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-    username TEXT UNIQUE NOT NULL,
-    avatar_url TEXT,
-    bio TEXT,
-    location TEXT,
-    reputation INTEGER DEFAULT 0,
-    role TEXT CHECK (role IN ('super_admin', 'moderator', 'user')) DEFAULT 'user',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+-- Table created in 001_initial_schema.sql
+-- Adding role column here
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS role TEXT CHECK (role IN ('super_admin', 'moderator', 'user')) DEFAULT 'user';
 
 -- Auto-create profile on signup
 CREATE OR REPLACE FUNCTION handle_new_user()
@@ -42,59 +35,24 @@ EXECUTE FUNCTION handle_new_user();
 -- ============================================
 -- 2. DEALS TABLE
 -- ============================================
-CREATE TABLE deals (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    author_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
-    title TEXT NOT NULL,
-    description TEXT,
-    price DECIMAL(10, 2) NOT NULL,
-    original_price DECIMAL(10, 2),
-    discount INTEGER DEFAULT 0,
-    image_url TEXT,
-    store TEXT,
-    store_url TEXT,
-    category TEXT,
-    temperature INTEGER DEFAULT 0,
-    coupon_code TEXT,
-    shipping_info TEXT,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    expires_at TIMESTAMP WITH TIME ZONE
-);
+-- Table created in 001_initial_schema.sql
+-- Adding is_active column here
+ALTER TABLE deals ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
 
 -- ============================================
 -- 3. COMMENTS TABLE
 -- ============================================
-CREATE TABLE comments (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    deal_id UUID REFERENCES deals(id) ON DELETE CASCADE,
-    author_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
-    content TEXT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+-- Table created in 001_initial_schema.sql (identical structure)
 
 -- ============================================
 -- 4. VOTES TABLE
 -- ============================================
-CREATE TABLE votes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    deal_id UUID REFERENCES deals(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
-    value INTEGER CHECK (value IN (-1, 1)),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    UNIQUE(deal_id, user_id)
-);
+-- Table created in 001_initial_schema.sql (identical structure)
 
 -- ============================================
 -- 5. SAVED DEALS TABLE
 -- ============================================
-CREATE TABLE saved_deals (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    deal_id UUID REFERENCES deals(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    UNIQUE(deal_id, user_id)
-);
+-- Table created in 001_initial_schema.sql (identical structure)
 
 -- ============================================
 -- 6. IMAGES TABLE (for deal galleries)
