@@ -10,12 +10,20 @@
 DROP POLICY IF EXISTS "profiles_update_own" ON profiles;
 
 -- Recreate: users can update own profile EXCEPT role
-CREATE POLICY "profiles_update_own_no_role" ON profiles
-    FOR UPDATE USING (auth.uid() = id)
-    WITH CHECK (
-        auth.uid() = id
-        AND (role IS NOT DISTINCT FROM (SELECT role FROM profiles WHERE id = auth.uid()))
-    );
+DROP POLICY IF EXISTS "profiles_update_own_no_role" ON public.profiles;
+CREATE POLICY "profiles_update_own_no_role" ON public.profiles
+FOR UPDATE
+USING (auth.uid() = id)
+WITH CHECK (
+  auth.uid() = id
+  AND (
+    role IS NOT DISTINCT FROM (
+      SELECT role
+      FROM public.profiles
+      WHERE id = auth.uid()
+    )
+  )
+);
 
 -- Secure RPC function: only super_admin can call
 CREATE OR REPLACE FUNCTION update_user_role(target_user_id UUID, new_role TEXT)

@@ -96,25 +96,39 @@ ALTER TABLE votes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE saved_deals ENABLE ROW LEVEL SECURITY;
 
 -- Profiles: Anyone can read, users can update their own
+DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON profiles;
 CREATE POLICY "Public profiles are viewable by everyone" ON profiles FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
 CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
 
 -- Deals: Anyone can read, authenticated users can create
+DROP POLICY IF EXISTS "Deals are viewable by everyone" ON deals;
 CREATE POLICY "Deals are viewable by everyone" ON deals FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Authenticated users can create deals" ON deals;
 CREATE POLICY "Authenticated users can create deals" ON deals FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+DROP POLICY IF EXISTS "Users can update own deals" ON deals;
 CREATE POLICY "Users can update own deals" ON deals FOR UPDATE USING (auth.uid() = author_id);
 
 -- Comments: Anyone can read, authenticated users can create
+DROP POLICY IF EXISTS "Comments are viewable by everyone" ON comments;
 CREATE POLICY "Comments are viewable by everyone" ON comments FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Authenticated users can create comments" ON comments;
 CREATE POLICY "Authenticated users can create comments" ON comments FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 
 -- Votes: Anyone can read, authenticated users can vote
+DROP POLICY IF EXISTS "Votes are viewable by everyone" ON votes;
 CREATE POLICY "Votes are viewable by everyone" ON votes FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Authenticated users can vote" ON votes;
 CREATE POLICY "Authenticated users can vote" ON votes FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+DROP POLICY IF EXISTS "Users can update own votes" ON votes;
 CREATE POLICY "Users can update own votes" ON votes FOR UPDATE USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can delete own votes" ON votes;
 CREATE POLICY "Users can delete own votes" ON votes FOR DELETE USING (auth.uid() = user_id);
 
 -- Saved deals: Users can only see and manage their own
+DROP POLICY IF EXISTS "Users can view own saved deals" ON saved_deals;
 CREATE POLICY "Users can view own saved deals" ON saved_deals FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can save deals" ON saved_deals;
 CREATE POLICY "Users can save deals" ON saved_deals FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can unsave deals" ON saved_deals;
 CREATE POLICY "Users can unsave deals" ON saved_deals FOR DELETE USING (auth.uid() = user_id);
