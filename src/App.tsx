@@ -15,7 +15,8 @@ import { useDeals } from './hooks/useDeals';
 import { supabase, isSupabaseConfigured } from './lib/supabase';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return null;
   return isAuthenticated ? <>{children}</> : <Navigate to="/" replace />;
 }
 
