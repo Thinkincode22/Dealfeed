@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useUserRole } from '../hooks/useUserRole';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { CATEGORIES } from '../constants/categories';
 
@@ -29,12 +30,34 @@ const initialForm: FormData = {
     expires_at: '',
 };
 
+// Reads ?prefill=<base64url JSON> set by the "Add to DealFeed" bookmarklet
+// and merges whatever fields it recognizes into the initial form state.
+const readPrefill = (): Partial<FormData> => {
+    try {
+        const raw = new URLSearchParams(window.location.search).get('prefill');
+        if (!raw) return {};
+        const json = atob(raw.replace(/-/g, '+').replace(/_/g, '/'));
+        const data = JSON.parse(json) as Record<string, unknown>;
+        const picked: Partial<FormData> = {};
+        (['title', 'description', 'price', 'originalPrice', 'store', 'category', 'url', 'image'] as const)
+            .forEach(key => {
+                const value = data[key];
+                if (typeof value === 'string' && value.trim()) picked[key] = value;
+            });
+        return picked;
+    } catch {
+        return {};
+    }
+};
+
 export const CreateDealForm = () => {
     const { user, isAuthenticated } = useAuth();
-    const [form, setForm] = useState<FormData>(initialForm);
+    const { canModerate } = useUserRole();
+    const [form, setForm] = useState<FormData>(() => ({ ...initialForm, ...readPrefill() }));
     const [errors, setErrors] = useState<FormErrors>({});
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [errorMsg, setErrorMsg] = useState('');
+    const [publishNow, setPublishNow] = useState(true);
 
     if (!isAuthenticated || !user) {
         return (
@@ -90,7 +113,7 @@ export const CreateDealForm = () => {
             category: form.category,
             expires_at: form.expires_at || null,
             author_id: user.id,
-            status: 'pending',
+            status: canModerate && publishNow ? 'approved' : 'pending',
             is_active: true,
         });
 
@@ -130,7 +153,7 @@ export const CreateDealForm = () => {
 
             {status === 'success' && (
                 <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 text-sm text-green-800 dark:text-green-200">
-                    Oferta dodana! Pojawi się po weryfikacji.
+                    {canModerate && publishNow ? 'Oferta opublikowana!' : 'Oferta dodana! Pojawi się po weryfikacji.'}
                 </div>
             )}
             {status === 'error' && (
@@ -158,6 +181,18 @@ export const CreateDealForm = () => {
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
             </div>
+
+            {canModerate && (
+                <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                    <input
+                        type="checkbox"
+                        checked={publishNow}
+                        onChange={e => setPublishNow(e.target.checked)}
+                        className="rounded border-gray-300 dark:border-gray-700"
+                    />
+                    Opublikuj od razu (pomiń kolejkę moderacji)
+                </label>
+            )}
 
             <button
                 type="submit"
