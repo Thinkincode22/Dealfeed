@@ -28,3 +28,4 @@ dist-ssr
 *.sw?
 .STRUCTURE.md
 session-summaries/
+supabase/.temp/

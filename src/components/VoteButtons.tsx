@@ -28,12 +28,18 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId }: VoteBu
 
         const fetchVote = async () => {
             const client = supabase!;
-            const { data } = await client
+            const { data, error } = await client
                 .from('votes')
                 .select('value')
                 .eq('deal_id', dealId)
                 .eq('user_id', user.id)
                 .single();
+
+            // PGRST116 = no matching row, expected when the user hasn't voted yet
+            if (error && error.code !== 'PGRST116') {
+                console.error('Error fetching vote:', error);
+                return;
+            }
 
             if (data) {
                 setVoteState(data.value === 1 ? 'up' : 'down');
