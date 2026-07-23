@@ -247,8 +247,8 @@ const ModerationTab = () => {
 
     return (
         <>
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-                <table className="w-full text-left border-collapse">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[720px]">
                     <thead className="bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 text-xs uppercase font-semibold">
                         <tr>
                             <th className="px-6 py-3">Deal</th>
@@ -466,8 +466,8 @@ const AllDealsTab = () => {
                 ))}
             </div>
 
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-                <table className="w-full text-left border-collapse">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[820px]">
                     <thead className="bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 text-xs uppercase font-semibold">
                         <tr>
                             <th className="px-6 py-3">Deal</th>
@@ -774,8 +774,8 @@ const UsersTab = () => {
     if (loading) return <p className="text-gray-500">Loading...</p>;
 
     return (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-            <table className="w-full text-left border-collapse">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-x-auto">
+            <table className="w-full text-left border-collapse min-w-[560px]">
                 <thead className="bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 text-xs uppercase font-semibold">
                     <tr>
                         <th className="px-6 py-3">User</th>
