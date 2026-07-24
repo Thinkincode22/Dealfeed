@@ -7,7 +7,6 @@ const DealPage = lazy(() => import('./pages/DealPage').then(m => ({ default: m.D
 const ProfilePage = lazy(() => import('./pages/ProfilePage').then(m => ({ default: m.ProfilePage })));
 const CreateDealForm = lazy(() => import('./components/CreateDealForm').then(m => ({ default: m.CreateDealForm })));
 const AdminPage = lazy(() => import('./pages/AdminPage').then(m => ({ default: m.AdminPage })));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { SearchProvider } from './contexts/SearchContext';
@@ -76,7 +75,15 @@ function App() {
                   </ProtectedRoute>
                 } />
                 <Route path="/admin" element={<AdminPage />} />
-                <Route path="*" element={<NotFoundPage />} />
+                <Route path="*" element={
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Page Not Found</h2>
+                    <p className="text-gray-600 dark:text-gray-400 mb-8">The page you are looking for does not exist.</p>
+                    <a href="/" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium hover:underline">
+                      &larr; Back to Deals
+                    </a>
+                  </div>
+                } />
                 </Routes>
               </Suspense>
 
