@@ -8,11 +8,12 @@ interface VoteButtonsProps {
     initialUpvotes: number;
     initialDownvotes: number;
     dealId: string;
+    variant?: 'default' | 'pill';
 }
 
 type VoteState = 'none' | 'up' | 'down';
 
-export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId }: VoteButtonsProps) => {
+export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId, variant = 'default' }: VoteButtonsProps) => {
     const { user } = useAuth();
     const { addNotification } = useNotifications();
     const [upvotes, setUpvotes] = useState(initialUpvotes);
@@ -127,6 +128,36 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId }: VoteBu
             }
         }
     };
+
+    if (variant === 'pill') {
+        return (
+            <div className="flex items-center gap-1.5 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-full pl-1 pr-2 py-1 shadow-md border border-white/70 dark:border-gray-700/60 whitespace-nowrap">
+                <button
+                    onClick={() => handleVote(1)}
+                    className={`p-1 rounded-full transition-colors ${voteState === 'up'
+                        ? 'text-violet-600 bg-violet-100 dark:text-violet-400 dark:bg-violet-900/40'
+                        : 'text-gray-400 hover:text-violet-500 hover:bg-violet-50 dark:hover:bg-violet-900/20'
+                        }`}
+                    aria-label="Upvote"
+                >
+                    <ChevronUp size={14} strokeWidth={3} />
+                </button>
+                <span className="text-sm font-bold text-gray-900 dark:text-white min-w-[1.2ch] text-center">
+                    {temperature}
+                </span>
+                <button
+                    onClick={() => handleVote(-1)}
+                    className={`p-1 rounded-full transition-colors ${voteState === 'down'
+                        ? 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/40'
+                        : 'text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20'
+                        }`}
+                    aria-label="Downvote"
+                >
+                    <ChevronDown size={14} strokeWidth={3} />
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-row sm:flex-col items-center justify-between sm:justify-start gap-1 min-w-[40px] sm:min-w-[50px] w-full sm:w-auto">
