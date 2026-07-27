@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Pencil, X, Loader2 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { CATEGORIES } from '../constants/categories';
@@ -77,7 +78,7 @@ export const EditDealModal = ({ deal, onClose, onSaved }: EditDealModalProps) =>
 
     const inputClass = "w-full px-3 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-violet-500 focus:outline-none";
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={onClose}>
             <div
                 className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
@@ -211,6 +212,7 @@ export const EditDealModal = ({ deal, onClose, onSaved }: EditDealModalProps) =>
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
