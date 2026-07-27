@@ -10,14 +10,14 @@ export const Sidebar = () => {
             {/* Categories Card */}
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <Tag size={20} className="text-blue-600" />
+                    <Tag size={20} className="text-violet-600" />
                     Kategorie
                 </h2>
                 <div className="space-y-2">
                     <button
                         onClick={() => setCategory(undefined)}
                         className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!filters.category
-                            ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'
+                            ? 'bg-violet-50 dark:bg-violet-900/40 text-violet-700 dark:text-violet-400'
                             : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
                             }`}
                     >
@@ -28,12 +28,12 @@ export const Sidebar = () => {
                             key={category}
                             onClick={() => setCategory(category)}
                             className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-between ${filters.category === category
-                                ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'
+                                ? 'bg-violet-50 dark:bg-violet-900/40 text-violet-700 dark:text-violet-400'
                                 : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
                                 }`}
                         >
                             {category}
-                            {filters.category === category && <X size={14} onClick={(e) => { e.stopPropagation(); setCategory(undefined); }} className="hover:text-blue-900" />}
+                            {filters.category === category && <X size={14} onClick={(e) => { e.stopPropagation(); setCategory(undefined); }} className="hover:text-violet-900" />}
                         </button>
                     ))}
                 </div>
@@ -79,14 +79,14 @@ export const Sidebar = () => {
 
 
             {/* Info Box */}
-            <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div className="bg-violet-50 dark:bg-violet-900/30 border border-violet-200 dark:border-violet-800 rounded-lg p-4">
                 <div className="flex items-start gap-3">
-                    <Info size={20} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                    <Info size={20} className="text-violet-600 dark:text-violet-400 flex-shrink-0 mt-0.5" />
                     <div>
-                        <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                        <h3 className="text-sm font-semibold text-violet-900 dark:text-violet-100 mb-1">
                             Jak to działa
                         </h3>
-                        <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                        <p className="text-xs text-violet-700 dark:text-violet-300 leading-relaxed">
                             Głosuj na ulubione okazje! Więcej głosów = gorętsze okazje. Dziel się znaleziskami i pomagaj innym oszczędzać.
                         </p>
                     </div>

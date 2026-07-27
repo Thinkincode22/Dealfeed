@@ -130,7 +130,7 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
     return (
         <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 mt-8">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                <MessageCircle className="text-blue-600" />
+                <MessageCircle className="text-violet-600" />
                 Comments ({comments.length})
             </h3>
 
@@ -143,12 +143,12 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
                             onChange={(e) => setNewComment(e.target.value)}
                             placeholder="What do you think about this deal?"
                             maxLength={1000}
-                            className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-4 pr-12 h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
+                            className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-4 pr-12 h-32 resize-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
                         />
                         <button
                             type="submit"
                             disabled={!newComment.trim() || isSubmitting}
-                            className="absolute bottom-4 right-4 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors"
+                            className="absolute bottom-4 right-4 p-2 bg-violet-600 text-white rounded-full hover:bg-violet-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors"
                         >
                             <Send size={18} />
                         </button>

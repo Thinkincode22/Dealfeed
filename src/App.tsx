@@ -1,6 +1,7 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Header } from './components/Header';
+import { BottomNav } from './components/BottomNav';
 
 const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
 const DealPage = lazy(() => import('./pages/DealPage').then(m => ({ default: m.DealPage })));
@@ -44,7 +45,7 @@ function App() {
       <AuthProvider>
         <SearchProvider>
           <Router>
-            <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300 pb-16 md:pb-0">
               <Header />
 
               {error && (
@@ -79,7 +80,7 @@ function App() {
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Page Not Found</h2>
                     <p className="text-gray-600 dark:text-gray-400 mb-8">The page you are looking for does not exist.</p>
-                    <a href="/" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium hover:underline">
+                    <a href="/" className="text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300 font-medium hover:underline">
                       &larr; Back to Deals
                     </a>
                   </div>
@@ -99,7 +100,7 @@ function App() {
                     <div className="md:text-right">
                       <h3 className="font-bold text-gray-900 dark:text-white mb-3">Kontakt</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Masz pytania? <a href="mailto:kontakt@dealfeed.pl" className="text-blue-600 dark:text-blue-400 hover:underline">kontakt@dealfeed.pl</a>
+                        Masz pytania? <a href="mailto:kontakt@dealfeed.pl" className="text-violet-600 dark:text-violet-400 hover:underline">kontakt@dealfeed.pl</a>
                       </p>
                     </div>
                   </div>
@@ -109,7 +110,7 @@ function App() {
                 </div>
               </footer>
 
-
+              <BottomNav />
             </div>
           </Router>
         </SearchProvider>

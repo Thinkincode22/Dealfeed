@@ -49,7 +49,7 @@ export const AdminPage = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-                <Shield className="text-blue-600" />
+                <Shield className="text-violet-600" />
                 Admin Panel
             </h1>
 
@@ -59,7 +59,7 @@ export const AdminPage = () => {
                     onClick={() => setTab('dashboard')}
                     className={`pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
                         tab === 'dashboard'
-                            ? 'border-blue-600 text-blue-600'
+                            ? 'border-violet-600 text-violet-600'
                             : 'border-transparent text-gray-500 hover:text-gray-700'
                     }`}
                 >
@@ -70,7 +70,7 @@ export const AdminPage = () => {
                     onClick={() => setTab('moderation')}
                     className={`pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
                         tab === 'moderation'
-                            ? 'border-blue-600 text-blue-600'
+                            ? 'border-violet-600 text-violet-600'
                             : 'border-transparent text-gray-500 hover:text-gray-700'
                     }`}
                 >
@@ -81,7 +81,7 @@ export const AdminPage = () => {
                     onClick={() => setTab('all-deals')}
                     className={`pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
                         tab === 'all-deals'
-                            ? 'border-blue-600 text-blue-600'
+                            ? 'border-violet-600 text-violet-600'
                             : 'border-transparent text-gray-500 hover:text-gray-700'
                     }`}
                 >
@@ -93,7 +93,7 @@ export const AdminPage = () => {
                         onClick={() => setTab('users')}
                         className={`pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
                         tab === 'users'
-                            ? 'border-blue-600 text-blue-600'
+                            ? 'border-violet-600 text-violet-600'
                             : 'border-transparent text-gray-500 hover:text-gray-700'
                     }`}
                     >
@@ -152,7 +152,7 @@ const DashboardTab = () => {
     if (loading) return <p className="text-gray-500">Loading statistics...</p>;
 
     const statCards = [
-        { label: 'Total Deals', value: stats.totalDeals, icon: Package, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+        { label: 'Total Deals', value: stats.totalDeals, icon: Package, color: 'text-violet-600', bg: 'bg-violet-50 dark:bg-violet-900/20' },
         { label: 'Approved', value: stats.approvedDeals, icon: Check, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
         { label: 'Pending', value: stats.pendingDeals, icon: TrendingUp, color: 'text-yellow-600', bg: 'bg-yellow-50 dark:bg-yellow-900/20' },
         { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-purple-600', bg: 'bg-purple-50 dark:bg-purple-900/20' },
@@ -286,7 +286,7 @@ const ModerationTab = () => {
                                         <div className="flex justify-end gap-2">
                                             <button
                                                 onClick={() => setEditingDeal(deal)}
-                                                className="p-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+                                                className="p-2 bg-violet-100 text-violet-700 rounded-lg hover:bg-violet-200 transition-colors"
                                                 title="Edit"
                                             >
                                                 <Pencil size={16} />
@@ -454,7 +454,7 @@ const AllDealsTab = () => {
                         onClick={() => setFilter(f)}
                         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                             filter === f
-                                ? 'bg-blue-600 text-white'
+                                ? 'bg-violet-600 text-white'
                                 : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
                         }`}
                     >
@@ -513,7 +513,7 @@ const AllDealsTab = () => {
                                         <div className="flex justify-end gap-2">
                                             <button
                                                 onClick={() => setEditingDeal(deal)}
-                                                className="p-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+                                                className="p-2 bg-violet-100 text-violet-700 rounded-lg hover:bg-violet-200 transition-colors"
                                                 title="Edit"
                                             >
                                                 <Pencil size={16} />
@@ -601,7 +601,7 @@ const EditDealModal = ({ deal, onSave, onClose }: EditDealModalProps) => {
         });
     };
 
-    const inputClass = "w-full px-3 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none";
+    const inputClass = "w-full px-3 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-violet-500 focus:outline-none";
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
@@ -723,7 +723,7 @@ const EditDealModal = ({ deal, onSave, onClose }: EditDealModalProps) => {
                         </button>
                         <button
                             type="submit"
-                            className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+                            className="flex-1 px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors font-medium"
                         >
                             Save Changes
                         </button>
@@ -794,7 +794,7 @@ const UsersTab = () => {
                             <td className="px-6 py-4">
                                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                                     user.role === 'super_admin' ? 'bg-purple-100 text-purple-700' :
-                                    user.role === 'moderator' ? 'bg-blue-100 text-blue-700' :
+                                    user.role === 'moderator' ? 'bg-violet-100 text-violet-700' :
                                     'bg-gray-100 text-gray-700'
                                 }`}>
                                     {user.role}
@@ -807,7 +807,7 @@ const UsersTab = () => {
                                 <select
                                     value={user.role}
                                     onChange={e => updateRole(user.id, e.target.value)}
-                                    className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-violet-500 outline-none"
                                 >
                                     <option value="user">user</option>
                                     <option value="moderator">moderator</option>

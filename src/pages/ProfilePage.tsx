@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Calendar, MapPin, Award, Package, Heart, Settings } from 'lucide-react';
+import { Calendar, MapPin, Award, Package, Heart, Settings, Gift } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
 import type { Deal } from '../types/deal';
 import { transformDBDealToDeal } from '../types/database';
 import { useAuth } from '../contexts/AuthContext';
@@ -13,9 +14,13 @@ interface ProfilePageProps {
 
 type Tab = 'my-deals' | 'saved' | 'settings';
 
+const isTab = (value: string | null): value is Tab =>
+    value === 'my-deals' || value === 'saved' || value === 'settings';
+
 export const ProfilePage = ({ deals }: ProfilePageProps) => {
     const { user, isAuthenticated, updateProfile } = useAuth();
-    const [activeTab, setActiveTab] = useState<Tab>('my-deals');
+    const [searchParams] = useSearchParams();
+    const [activeTab, setActiveTab] = useState<Tab>(isTab(searchParams.get('tab')) ? searchParams.get('tab') as Tab : 'my-deals');
     const [savedDeals, setSavedDeals] = useState<Deal[]>([]);
     const [savedLoading, setSavedLoading] = useState(false);
 
@@ -75,7 +80,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Sign In Required</h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-8">Please sign in to view your profile.</p>
-                <a href="/" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium hover:underline">
+                <a href="/" className="text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300 font-medium hover:underline">
                     &larr; Back to Deals
                 </a>
             </div>
@@ -87,7 +92,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Profile Header */}
             <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden mb-8">
-                <div className="h-32 bg-gradient-to-r from-blue-600 to-blue-400"></div>
+                <div className="h-32 bg-gradient-to-r from-violet-600 to-violet-400"></div>
                 <div className="px-8 pb-8">
                     <div className="relative flex items-end -mt-12 mb-6">
                         <img
@@ -114,8 +119,8 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-6 border-t border-gray-100 dark:border-gray-800">
                         <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
-                            <div className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                                <Award className="text-blue-600 dark:text-blue-400" size={20} />
+                            <div className="p-2 bg-violet-50 dark:bg-violet-900/30 rounded-lg">
+                                <Award className="text-violet-600 dark:text-violet-400" size={20} />
                             </div>
                             <div>
                                 <div className="font-bold text-gray-900 dark:text-white">{profile?.reputation || 0}</div>
@@ -162,7 +167,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                 <button
                     onClick={() => setActiveTab('my-deals')}
                     className={`pb-4 text-sm font-medium transition-colors relative ${activeTab === 'my-deals'
-                        ? 'text-blue-600 dark:text-blue-400'
+                        ? 'text-violet-600 dark:text-violet-400'
                         : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         }`}
                 >
@@ -171,13 +176,13 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                         My Deals ({myDeals.length})
                     </div>
                     {activeTab === 'my-deals' && (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t-full"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-violet-600 dark:bg-violet-400 rounded-t-full"></div>
                     )}
                 </button>
                 <button
                     onClick={() => setActiveTab('saved')}
                     className={`pb-4 text-sm font-medium transition-colors relative ${activeTab === 'saved'
-                        ? 'text-blue-600 dark:text-blue-400'
+                        ? 'text-violet-600 dark:text-violet-400'
                         : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         }`}
                 >
@@ -186,13 +191,13 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                         Zapisane ({savedDeals.length})
                     </div>
                     {activeTab === 'saved' && (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t-full"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-violet-600 dark:bg-violet-400 rounded-t-full"></div>
                     )}
                 </button>
                 <button
                     onClick={() => setActiveTab('settings')}
                     className={`pb-4 text-sm font-medium transition-colors relative ${activeTab === 'settings'
-                        ? 'text-blue-600 dark:text-blue-400'
+                        ? 'text-violet-600 dark:text-violet-400'
                         : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         }`}
                 >
@@ -201,7 +206,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                         Ustawienia <span className="text-xs text-gray-400">(Wkrótce)</span>
                     </div>
                     {activeTab === 'settings' && (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t-full"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-violet-600 dark:bg-violet-400 rounded-t-full"></div>
                     )}
                 </button>
             </div>
@@ -238,10 +243,20 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                 <DealCard key={deal.id} deal={deal} />
                             ))
                         ) : (
-                            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
-                                <Heart size={48} className="mx-auto mb-4 text-gray-400" />
-                                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Brak zapisanych okazji</h3>
-                                <p className="text-gray-500 dark:text-gray-400">Zapisz okazje, aby zobaczyć je tutaj!</p>
+                            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-10 text-center">
+                                <div className="w-20 h-20 mx-auto mb-5 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-violet-500/30">
+                                    <Gift size={32} className="text-white" />
+                                </div>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Brak zapisanych okazji</h3>
+                                <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-xs mx-auto">
+                                    Zapisz swoje ulubione okazje, aby łatwo je odnaleźć później.
+                                </p>
+                                <Link
+                                    to="/"
+                                    className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white font-semibold px-6 py-2.5 rounded-full transition-colors"
+                                >
+                                    Przeglądaj okazje
+                                </Link>
                             </div>
                         )}
                     </div>
@@ -275,7 +290,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                         value={editUsername}
                                         onChange={(e) => setEditUsername(e.target.value)}
                                         maxLength={30}
-                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
                                     />
                                 </div>
 
@@ -286,7 +301,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                         onChange={(e) => setEditBio(e.target.value)}
                                         rows={3}
                                         maxLength={200}
-                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all"
+                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-violet-500 focus:border-transparent resize-none transition-all"
                                     />
                                 </div>
 
@@ -297,7 +312,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                         value={editLocation}
                                         onChange={(e) => setEditLocation(e.target.value)}
                                         maxLength={100}
-                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
                                     />
                                 </div>
 
@@ -307,7 +322,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                         type="url"
                                         value={editAvatarUrl}
                                         onChange={(e) => setEditAvatarUrl(e.target.value)}
-                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
                                     />
                                 </div>
 
@@ -322,7 +337,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                                     <button
                                         type="submit"
                                         disabled={editSaving}
-                                        className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors"
+                                        className="px-6 py-2.5 bg-violet-600 hover:bg-violet-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors"
                                     >
                                         {editSaving ? 'Saving...' : 'Save Changes'}
                                     </button>

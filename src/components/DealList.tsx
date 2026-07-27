@@ -34,7 +34,7 @@ export const DealList = ({ deals, hasMore, onLoadMore, loading }: DealListProps)
             {/* Header with Title and Sort Dropdown */}
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    Today's Best Deals {filteredDeals.length > 0 && <span className="text-lg text-gray-600 dark:text-gray-400 font-normal">({sortedDeals.length})</span>}
+                    All Deals {filteredDeals.length > 0 && <span className="text-lg text-gray-600 dark:text-gray-400 font-normal">({sortedDeals.length})</span>}
                 </h1>
 
                 {/* Sort Dropdown */}
@@ -42,7 +42,7 @@ export const DealList = ({ deals, hasMore, onLoadMore, loading }: DealListProps)
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as SortOption)}
-                        className="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 pr-10 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-gray-400 dark:hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer transition-colors"
+                        className="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 pr-10 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-gray-400 dark:hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent cursor-pointer transition-colors"
                     >
                         <option value="hot">🔥 Trending</option>
                         <option value="new">🆕 Newest</option>

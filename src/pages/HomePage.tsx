@@ -1,5 +1,7 @@
 import { DealList } from '../components/DealList';
 import { Sidebar } from '../components/Sidebar';
+import { TodaysBestDeals } from '../components/TodaysBestDeals';
+import { RecommendedForYou } from '../components/RecommendedForYou';
 import type { Deal } from '../types/deal';
 
 interface HomePageProps {
@@ -11,8 +13,11 @@ interface HomePageProps {
 
 export const HomePage = ({ deals, hasMore, onLoadMore, loading }: HomePageProps) => {
     return (
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+            <TodaysBestDeals deals={deals} />
+            <RecommendedForYou deals={deals} />
+
+            <div id="all-deals" className="grid grid-cols-1 lg:grid-cols-3 gap-8 scroll-mt-24">
                 {/* Main Content - Deals List */}
                 <div className="lg:col-span-2">
                     <DealList deals={deals} hasMore={hasMore} onLoadMore={onLoadMore} loading={loading} />
