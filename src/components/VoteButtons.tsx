@@ -5,23 +5,19 @@ import { useNotifications } from '../contexts/NotificationContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 interface VoteButtonsProps {
-    initialUpvotes: number;
-    initialDownvotes: number;
+    initialTemperature: number;
     dealId: string;
     variant?: 'default' | 'pill';
 }
 
 type VoteState = 'none' | 'up' | 'down';
 
-export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId, variant = 'default' }: VoteButtonsProps) => {
+export const VoteButtons = ({ initialTemperature, dealId, variant = 'default' }: VoteButtonsProps) => {
     const { user } = useAuth();
     const { addNotification } = useNotifications();
-    const [upvotes, setUpvotes] = useState(initialUpvotes);
-    const [downvotes, setDownvotes] = useState(initialDownvotes);
+    const [temperature, setTemperature] = useState(initialTemperature);
     const [voteState, setVoteState] = useState<VoteState>('none');
     const lastVoteTime = useRef<number>(0);
-
-    const temperature = upvotes - downvotes;
 
     // Load existing vote from DB on mount
     useEffect(() => {
@@ -62,30 +58,13 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId, variant 
         const newValue = isSameVote ? 0 : value;
         const newVoteState: VoteState = newValue === 1 ? 'up' : newValue === -1 ? 'down' : 'none';
 
-        // Optimistic UI update
-        const prevUp = upvotes;
-        const prevDown = downvotes;
+        // Optimistic UI update: shift the aggregate temperature by the
+        // difference between the new and previous vote value (-1/0/1)
+        const prevTemperature = temperature;
         const prevVoteState = voteState;
+        const prevValue = prevVoteState === 'up' ? 1 : prevVoteState === 'down' ? -1 : 0;
 
-        if (newVoteState === 'up') {
-            if (prevVoteState === 'down') {
-                setUpvotes(prevUp + 1);
-                setDownvotes(prevDown - 1);
-            } else if (prevVoteState === 'none') {
-                setUpvotes(prevUp + 1);
-            }
-        } else if (newVoteState === 'down') {
-            if (prevVoteState === 'up') {
-                setUpvotes(prevUp - 1);
-                setDownvotes(prevDown + 1);
-            } else if (prevVoteState === 'none') {
-                setDownvotes(prevDown + 1);
-            }
-        } else {
-            // Removing vote
-            if (prevVoteState === 'up') setUpvotes(prevUp - 1);
-            if (prevVoteState === 'down') setDownvotes(prevDown - 1);
-        }
+        setTemperature(prevTemperature + (newValue - prevValue));
         setVoteState(newVoteState);
 
         // Persist to DB if Supabase is configured and user is logged in
@@ -122,8 +101,7 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId, variant 
             } catch (err) {
                 console.error('Error persisting vote:', err);
                 // Rollback optimistic update
-                setUpvotes(prevUp);
-                setDownvotes(prevDown);
+                setTemperature(prevTemperature);
                 setVoteState(prevVoteState);
             }
         }

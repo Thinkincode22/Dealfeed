@@ -22,8 +22,6 @@ export const DealCard = ({ deal, onUpdated }: DealCardProps) => {
         originalPrice,
         image,
         storeUrl,
-        upvotes,
-        downvotes,
         comments,
         temperature,
         author
@@ -72,8 +70,7 @@ export const DealCard = ({ deal, onUpdated }: DealCardProps) => {
                     <div className="absolute -bottom-1 left-1/2 -translate-x-1/2">
                         <VoteButtons
                             variant="pill"
-                            initialUpvotes={upvotes}
-                            initialDownvotes={downvotes}
+                            initialTemperature={temperature}
                             dealId={id}
                         />
                     </div>

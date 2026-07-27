@@ -92,8 +92,7 @@ export const DealPage = ({ deals }: DealPageProps) => {
         image,
         store,
         storeUrl,
-        upvotes,
-        downvotes,
+        temperature,
         comments,
         author,
         createdAt
@@ -189,8 +188,7 @@ export const DealPage = ({ deals }: DealPageProps) => {
                         <div className="flex flex-wrap items-center gap-4 mb-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
                             <div className="flex items-center gap-2">
                                 <VoteButtons
-                                    initialUpvotes={upvotes}
-                                    initialDownvotes={downvotes}
+                                    initialTemperature={temperature}
                                     dealId={deal.id}
                                 />
                             </div>
