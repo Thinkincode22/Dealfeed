@@ -583,21 +583,25 @@ const EditDealModal = ({ deal, onSave, onClose }: EditDealModalProps) => {
         store: deal.store || '',
         store_url: deal.store_url || '',
         category: deal.category,
-        price: deal.price,
-        original_price: deal.original_price,
+        price: String(deal.price),
+        original_price: String(deal.original_price),
         image_url: deal.image_url || '',
     });
 
-    const set = (field: string, value: string | number) => {
+    const set = (field: string, value: string) => {
         setForm(prev => ({ ...prev, [field]: value }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const price = parseFloat(form.price) || 0;
+        const original_price = parseFloat(form.original_price) || 0;
         onSave({
             ...deal,
             ...form,
-            discount: Math.round(((form.original_price - form.price) / form.original_price) * 100),
+            price,
+            original_price,
+            discount: Math.round(((original_price - price) / original_price) * 100),
         });
     };
 
@@ -648,7 +652,7 @@ const EditDealModal = ({ deal, onSave, onClose }: EditDealModalProps) => {
                             <input
                                 type="number"
                                 value={form.price}
-                                onChange={e => set('price', parseFloat(e.target.value) || 0)}
+                                onChange={e => set('price', e.target.value)}
                                 required
                                 min={0}
                                 step={0.01}
@@ -660,7 +664,7 @@ const EditDealModal = ({ deal, onSave, onClose }: EditDealModalProps) => {
                             <input
                                 type="number"
                                 value={form.original_price}
-                                onChange={e => set('original_price', parseFloat(e.target.value) || 0)}
+                                onChange={e => set('original_price', e.target.value)}
                                 required
                                 min={0}
                                 step={0.01}
