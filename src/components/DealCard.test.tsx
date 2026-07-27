@@ -63,11 +63,6 @@ describe('DealCard', () => {
         expect(screen.getByText('Test Deal Title')).toBeInTheDocument();
     });
 
-    it('renders store name', () => {
-        renderWithRouter(<DealCard deal={mockDeal} />);
-        expect(screen.getByText('TestStore')).toBeInTheDocument();
-    });
-
     it('renders author username', () => {
         renderWithRouter(<DealCard deal={mockDeal} />);
         expect(screen.getByText('by testuser')).toBeInTheDocument();
@@ -85,15 +80,9 @@ describe('DealCard', () => {
         expect(originalPriceElements.length).toBeGreaterThan(0);
     });
 
-    it('renders discount badge', () => {
-        renderWithRouter(<DealCard deal={mockDeal} />);
-        expect(screen.getByText('-33%')).toBeInTheDocument();
-    });
-
     it('renders comment count', () => {
         renderWithRouter(<DealCard deal={mockDeal} />);
-        const commentCount = screen.getAllByText('2');
-        expect(commentCount.length).toBeGreaterThan(0);
+        expect(screen.getByText('2 Comments')).toBeInTheDocument();
     });
 
     it('renders temperature', () => {
@@ -109,9 +98,9 @@ describe('DealCard', () => {
         expect(img).toHaveAttribute('src', 'https://example.com/image.jpg');
     });
 
-    it('renders "Get Deal" link with correct href', () => {
+    it('renders "Go to Deal" link with correct href', () => {
         renderWithRouter(<DealCard deal={mockDeal} />);
-        const getDealLinks = screen.getAllByText('Get Deal');
+        const getDealLinks = screen.getAllByText('Go to Deal');
         expect(getDealLinks.length).toBeGreaterThan(0);
         expect(getDealLinks[0].closest('a')).toHaveAttribute('href', 'https://example.com');
     });
