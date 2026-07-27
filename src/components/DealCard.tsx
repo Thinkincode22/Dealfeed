@@ -1,14 +1,19 @@
-import { MessageCircle, ExternalLink, Flame, Store } from 'lucide-react';
+import { useState } from 'react';
+import { MessageCircle, ExternalLink, Flame, Store, Pencil } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { VoteButtons } from './VoteButtons';
+import { EditDealModal } from './EditDealModal';
 import { sanitizeUrl } from '../lib/sanitize';
+import { useAuth } from '../contexts/AuthContext';
+import { useUserRole } from '../hooks/useUserRole';
 import type { Deal } from '../types/deal';
 
 interface DealCardProps {
     deal: Deal;
+    onUpdated?: () => void;
 }
 
-export const DealCard = ({ deal }: DealCardProps) => {
+export const DealCard = ({ deal, onUpdated }: DealCardProps) => {
     const {
         id,
         title,
@@ -26,6 +31,11 @@ export const DealCard = ({ deal }: DealCardProps) => {
         author
     } = deal;
 
+    const { user } = useAuth();
+    const { canModerate } = useUserRole();
+    const [isEditing, setIsEditing] = useState(false);
+    const canEdit = canModerate || user?.profile?.username === author.username;
+
     // Визначаємо колір температури
     const getTempColor = (temp: number) => {
         if (temp >= 300) return 'text-orange-600';
@@ -38,7 +48,18 @@ export const DealCard = ({ deal }: DealCardProps) => {
     const safeStoreUrl = sanitizeUrl(storeUrl) || '#';
 
     return (
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-gray-800 p-4">
+        <div className="relative bg-white dark:bg-gray-900 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-gray-800 p-4">
+            {canEdit && (
+                <button
+                    onClick={() => setIsEditing(true)}
+                    className="absolute top-3 right-3 z-10 p-1.5 rounded-full text-gray-400 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-colors"
+                    title="Edytuj ofertę"
+                    aria-label="Edytuj ofertę"
+                >
+                    <Pencil size={16} />
+                </button>
+            )}
+
             <div className="flex flex-col sm:flex-row gap-4">
                 {/* Vote Buttons Section */}
                 <div className="flex flex-row sm:flex-col items-center justify-between sm:justify-start gap-3 sm:gap-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-2 sm:min-w-[70px] transition-colors order-2 sm:order-1">
@@ -71,7 +92,7 @@ export const DealCard = ({ deal }: DealCardProps) => {
                     {/* Content Section */}
                     <div className="flex-1 min-w-0">
                         {/* Header with store and author */}
-                        <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1 sm:mb-2">
+                        <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1 sm:mb-2 pr-6">
                             <Store size={14} className="flex-shrink-0" />
                             <span className="font-medium truncate">{store}</span>
                             <span className="text-gray-400">•</span>
@@ -79,7 +100,7 @@ export const DealCard = ({ deal }: DealCardProps) => {
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-base sm:text-xl font-semibold text-gray-900 dark:text-white mb-1 sm:mb-2 line-clamp-1 sm:line-clamp-2">
+                        <h3 className="text-base sm:text-xl font-semibold text-gray-900 dark:text-white mb-1 sm:mb-2 line-clamp-1 sm:line-clamp-2 pr-6 sm:pr-0">
                             <Link to={`/deal/${id}`} className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">
                                 {title}
                             </Link>
@@ -151,13 +172,21 @@ export const DealCard = ({ deal }: DealCardProps) => {
                 </div>
 
                 {/* Desktop Temperature Badge */}
-                <div className="hidden sm:block flex-shrink-0 order-3">
+                <div className="hidden sm:block flex-shrink-0 order-3 pr-6">
                     <div className={`flex items-center gap-1 ${getTempColor(temperature)}`}>
                         <Flame size={18} fill="currentColor" />
                         <span className="font-bold text-sm">{temperature}°</span>
                     </div>
                 </div>
             </div>
+
+            {isEditing && (
+                <EditDealModal
+                    deal={deal}
+                    onClose={() => setIsEditing(false)}
+                    onSaved={() => onUpdated?.()}
+                />
+            )}
         </div>
     );
 };

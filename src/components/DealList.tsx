@@ -10,9 +10,10 @@ interface DealListProps {
     hasMore: boolean;
     onLoadMore: () => void;
     loading: boolean;
+    onDealUpdated?: () => void;
 }
 
-export const DealList = ({ deals, hasMore, onLoadMore, loading }: DealListProps) => {
+export const DealList = ({ deals, hasMore, onLoadMore, loading, onDealUpdated }: DealListProps) => {
     const { sortBy, setSortBy } = useSearch();
     const filteredDeals = useFilteredDeals(deals);
 
@@ -61,7 +62,7 @@ export const DealList = ({ deals, hasMore, onLoadMore, loading }: DealListProps)
             <div className="space-y-4">
                 {sortedDeals.length > 0 ? (
                     sortedDeals.map((deal) => (
-                        <DealCard key={deal.id} deal={deal} />
+                        <DealCard key={deal.id} deal={deal} onUpdated={onDealUpdated} />
                     ))
                 ) : (
                     <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-12 text-center transition-colors">

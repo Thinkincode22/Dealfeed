@@ -22,7 +22,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
-  const { deals, loading, error, hasMore, loadMore } = useDeals();
+  const { deals, loading, error, hasMore, loadMore, refetch } = useDeals();
 
   useEffect(() => {
     if (isSupabaseConfigured && supabase) {
@@ -65,9 +65,9 @@ function App() {
                 </div>
               }>
                 <Routes>
-                <Route path="/" element={<HomePage deals={deals} hasMore={hasMore} onLoadMore={loadMore} loading={loading} />} />
+                <Route path="/" element={<HomePage deals={deals} hasMore={hasMore} onLoadMore={loadMore} loading={loading} onDealUpdated={refetch} />} />
                 <Route path="/deal/:id" element={<DealPage deals={deals} />} />
-                <Route path="/profile" element={<ProtectedRoute><ProfilePage deals={deals} /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><ProfilePage deals={deals} onDealUpdated={refetch} /></ProtectedRoute>} />
                 <Route path="/create-deal" element={
                   <ProtectedRoute>
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

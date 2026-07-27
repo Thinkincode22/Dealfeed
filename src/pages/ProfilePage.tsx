@@ -10,6 +10,7 @@ import { sanitizeUrl } from '../lib/sanitize';
 
 interface ProfilePageProps {
     deals: Deal[];
+    onDealUpdated?: () => void;
 }
 
 type Tab = 'my-deals' | 'saved' | 'settings';
@@ -17,7 +18,7 @@ type Tab = 'my-deals' | 'saved' | 'settings';
 const isTab = (value: string | null): value is Tab =>
     value === 'my-deals' || value === 'saved' || value === 'settings';
 
-export const ProfilePage = ({ deals }: ProfilePageProps) => {
+export const ProfilePage = ({ deals, onDealUpdated }: ProfilePageProps) => {
     const { user, isAuthenticated, updateProfile } = useAuth();
     const [searchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState<Tab>(isTab(searchParams.get('tab')) ? searchParams.get('tab') as Tab : 'my-deals');
@@ -217,7 +218,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                     <div className="max-w-4xl mx-auto space-y-4">
                         {myDeals.length > 0 ? (
                             myDeals.map(deal => (
-                                <DealCard key={deal.id} deal={deal} />
+                                <DealCard key={deal.id} deal={deal} onUpdated={onDealUpdated} />
                             ))
                         ) : (
                             <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
@@ -240,7 +241,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                             </div>
                         ) : savedDeals.length > 0 ? (
                             savedDeals.map(deal => (
-                                <DealCard key={deal.id} deal={deal} />
+                                <DealCard key={deal.id} deal={deal} onUpdated={onDealUpdated} />
                             ))
                         ) : (
                             <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-10 text-center">
