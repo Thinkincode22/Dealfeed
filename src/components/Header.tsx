@@ -73,11 +73,11 @@ export const Header = () => {
                             <div className="bg-white/15 backdrop-blur-sm rounded-xl p-2 group-hover:bg-white/25 transition-colors">
                                 <Zap size={22} className="text-white" fill="white" />
                             </div>
-                            <span className="text-lg sm:text-xl font-bold text-white">DealFeed</span>
+                            <span className="hidden min-[400px]:inline text-lg sm:text-xl font-bold text-white">DealFeed</span>
                         </a>
 
                         {/* Search Bar */}
-                        <div className="flex-1 max-w-2xl">
+                        <div className="flex-1 min-w-0 max-w-2xl">
                             <div className="relative">
                                 <Search
                                     className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-violet-400"
