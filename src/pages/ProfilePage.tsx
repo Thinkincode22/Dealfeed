@@ -100,11 +100,11 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
                             alt={profile?.username || 'User'}
                             className="w-32 h-32 rounded-full border-4 border-white dark:border-gray-900 bg-white dark:bg-gray-800"
                         />
-                        <div className="ml-6 mb-2 flex-1">
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                        <div className="ml-6 mb-2 flex-1 min-w-0">
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white break-words">
                                 {profile?.username || 'User'}
                             </h1>
-                            <p className="text-gray-600 dark:text-gray-400 mt-1">
+                            <p className="text-gray-600 dark:text-gray-400 mt-1 break-words">
                                 {profile?.bio || 'No bio yet'}
                             </p>
                         </div>
@@ -163,7 +163,7 @@ export const ProfilePage = ({ deals }: ProfilePageProps) => {
             </div>
 
             {/* Content Tabs */}
-            <div className="flex items-center gap-6 mb-8 border-b border-gray-200 dark:border-gray-800">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-8 border-b border-gray-200 dark:border-gray-800">
                 <button
                     onClick={() => setActiveTab('my-deals')}
                     className={`pb-4 text-sm font-medium transition-colors relative ${activeTab === 'my-deals'
