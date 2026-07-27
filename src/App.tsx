@@ -1,5 +1,6 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 
@@ -115,6 +116,7 @@ function App() {
           </Router>
         </SearchProvider>
       </AuthProvider>
+      <SpeedInsights />
     </ErrorBoundary>
   );
 }
