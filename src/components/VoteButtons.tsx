@@ -129,7 +129,7 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId }: VoteBu
     };
 
     return (
-        <div className="flex flex-col items-center gap-1 min-w-[40px] sm:min-w-[50px]">
+        <div className="flex flex-row sm:flex-col items-center justify-between sm:justify-start gap-1 min-w-[40px] sm:min-w-[50px] w-full sm:w-auto">
             <button
                 onClick={() => handleVote(1)}
                 className={`p-1.5 rounded transition-colors ${voteState === 'up'
