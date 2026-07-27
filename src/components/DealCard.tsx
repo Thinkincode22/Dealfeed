@@ -80,7 +80,7 @@ export const DealCard = ({ deal }: DealCardProps) => {
 
                         {/* Title */}
                         <h3 className="text-base sm:text-xl font-semibold text-gray-900 dark:text-white mb-1 sm:mb-2 line-clamp-1 sm:line-clamp-2">
-                            <Link to={`/deal/${id}`} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                            <Link to={`/deal/${id}`} className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">
                                 {title}
                             </Link>
                         </h3>
@@ -123,7 +123,7 @@ export const DealCard = ({ deal }: DealCardProps) => {
                                     href={safeStoreUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors text-sm"
+                                    className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors text-sm"
                                 >
                                     Get Deal
                                     <ExternalLink size={14} />
@@ -143,7 +143,7 @@ export const DealCard = ({ deal }: DealCardProps) => {
                         href={safeStoreUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 bg-blue-600 text-white py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm"
+                        className="flex-1 bg-violet-600 text-white py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm"
                     >
                         Go to Deal
                         <ExternalLink size={14} />

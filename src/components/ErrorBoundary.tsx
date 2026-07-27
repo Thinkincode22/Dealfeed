@@ -40,7 +40,7 @@ export class ErrorBoundary extends Component<Props, State> {
                                 this.setState({ hasError: false, error: null });
                                 window.location.href = '/';
                             }}
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors"
+                            className="bg-violet-600 hover:bg-violet-700 text-white font-medium px-6 py-3 rounded-lg transition-colors"
                         >
                             Go to Homepage
                         </button>

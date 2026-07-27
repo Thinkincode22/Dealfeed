@@ -133,8 +133,8 @@ export const VoteButtons = ({ initialUpvotes, initialDownvotes, dealId }: VoteBu
             <button
                 onClick={() => handleVote(1)}
                 className={`p-1.5 rounded transition-colors ${voteState === 'up'
-                    ? 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/40'
-                    : 'text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                    ? 'text-violet-600 bg-violet-100 dark:text-violet-400 dark:bg-violet-900/40'
+                    : 'text-gray-400 hover:text-violet-500 hover:bg-violet-50 dark:hover:bg-violet-900/20'
                     }`}
                 aria-label="Upvote"
             >

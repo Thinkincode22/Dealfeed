@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useNotifications, type Notification } from '../contexts/NotificationContext';
 
 const iconMap: Record<Notification['type'], React.ReactNode> = {
-    comment: <MessageCircle size={16} className="text-blue-500" />,
+    comment: <MessageCircle size={16} className="text-violet-500" />,
     vote: <ThumbsUp size={16} className="text-green-500" />,
     deal_status: <Package size={16} className="text-purple-500" />,
 };
@@ -28,7 +28,7 @@ export const NotificationDropdown = () => {
         <div className="relative" ref={ref}>
             <button
                 onClick={() => setOpen(!open)}
-                className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors dark:text-gray-300 dark:hover:bg-gray-800"
+                className="relative p-2 text-white/90 hover:bg-white/20 rounded-full transition-colors"
                 aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
             >
                 <Bell size={20} />
@@ -47,7 +47,7 @@ export const NotificationDropdown = () => {
                             {unreadCount > 0 && (
                                 <button
                                     onClick={markAllRead}
-                                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                                    className="text-xs text-violet-600 dark:text-violet-400 hover:underline flex items-center gap-1"
                                 >
                                     <CheckCheck size={12} />
                                     Mark all read
@@ -75,7 +75,7 @@ export const NotificationDropdown = () => {
                                 <div
                                     key={n.id}
                                     onClick={() => markAsRead(n.id)}
-                                    className={`px-4 py-3 border-b border-gray-100 dark:border-gray-800 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50 ${!n.read ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}
+                                    className={`px-4 py-3 border-b border-gray-100 dark:border-gray-800 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50 ${!n.read ? 'bg-violet-50/50 dark:bg-violet-900/10' : ''}`}
                                 >
                                     <div className="flex items-start gap-3">
                                         <div className="mt-0.5">{iconMap[n.type]}</div>
@@ -86,14 +86,14 @@ export const NotificationDropdown = () => {
                                                 <Link
                                                     to={`/deal/${n.dealId}`}
                                                     onClick={() => setOpen(false)}
-                                                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline mt-1 inline-block"
+                                                    className="text-xs text-violet-600 dark:text-violet-400 hover:underline mt-1 inline-block"
                                                 >
                                                     View deal
                                                 </Link>
                                             )}
                                         </div>
                                         {!n.read && (
-                                            <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1.5"></span>
+                                            <span className="w-2 h-2 bg-violet-500 rounded-full flex-shrink-0 mt-1.5"></span>
                                         )}
                                     </div>
                                 </div>
