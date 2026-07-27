@@ -447,7 +447,7 @@ const AllDealsTab = () => {
     return (
         <>
             {/* Filter buttons */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex flex-wrap gap-2 mb-4">
                 {(['all', 'pending', 'approved', 'rejected'] as const).map(f => (
                     <button
                         key={f}
