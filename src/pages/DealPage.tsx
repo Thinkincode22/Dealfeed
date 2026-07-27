@@ -166,7 +166,7 @@ export const DealPage = ({ deals }: DealPageProps) => {
                                     </div>
                                     <span className="text-gray-300">|</span>
                                     <div className="flex items-center gap-1.5">
-                                        <img src={author.avatar} alt={author.username} className="w-5 h-5 rounded-full" />
+                                        <img src={sanitizeUrl(author.avatar) || `https://api.dicebear.com/7.x/avataaars/svg?seed=${author.username}`} alt={author.username} className="w-5 h-5 rounded-full" />
                                         <span>Posted by <span className="font-medium text-gray-900">{author.username}</span></span>
                                     </div>
                                 </div>

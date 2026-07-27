@@ -279,7 +279,7 @@ export const ProfilePage = ({ deals, onDealUpdated }: ProfilePageProps) => {
                                     username: editUsername,
                                     bio: editBio,
                                     location: editLocation,
-                                    avatar_url: editAvatarUrl,
+                                    avatar_url: sanitizeUrl(editAvatarUrl),
                                 });
                                 setEditSaving(false);
                                 setEditMessage(error ? 'Failed to save changes.' : 'Profile updated!');

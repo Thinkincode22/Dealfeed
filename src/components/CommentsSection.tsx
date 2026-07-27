@@ -3,6 +3,7 @@ import { MessageCircle, Send } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNotifications } from '../contexts/NotificationContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { sanitizeUrl } from '../lib/sanitize';
 import type { Comment } from '../types/deal';
 import type { DBCommentRow } from '../types/database';
 
@@ -171,7 +172,7 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
                     comments.map((comment) => (
                         <div key={comment.id} className="flex gap-4">
                             <img
-                                src={comment.author.avatar}
+                                src={sanitizeUrl(comment.author.avatar) || `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.author.username}`}
                                 alt={comment.author.username}
                                 className="w-10 h-10 rounded-full flex-shrink-0 bg-gray-100 dark:bg-gray-800"
                             />
