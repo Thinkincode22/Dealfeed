@@ -17,6 +17,7 @@ export const DealCard = ({ deal, onUpdated }: DealCardProps) => {
     const {
         id,
         title,
+        description,
         price,
         originalPrice,
         image,
@@ -57,7 +58,7 @@ export const DealCard = ({ deal, onUpdated }: DealCardProps) => {
                 </button>
             )}
 
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-nowrap gap-4">
                 {/* Image + overlaid vote pill */}
                 <div className="relative shrink-0 pb-3">
                     <Link to={`/deal/${id}`} className="block w-28 h-28 rounded-2xl overflow-hidden bg-gray-100">
@@ -79,7 +80,7 @@ export const DealCard = ({ deal, onUpdated }: DealCardProps) => {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 min-w-[220px] pr-6">
+                <div className="flex-1 min-w-0 pr-6">
                     <div className="inline-flex items-center gap-1.5 bg-white/70 dark:bg-gray-800/70 px-3 py-1 rounded-full text-xs font-medium text-gray-600 dark:text-gray-300 mb-2">
                         <Store size={12} className="flex-shrink-0" />
                         <span className="truncate max-w-[160px]">by {author.username}</span>
@@ -103,6 +104,11 @@ export const DealCard = ({ deal, onUpdated }: DealCardProps) => {
                     </div>
                 </div>
             </div>
+
+            {/* Description — fills the space freed up by keeping the content block beside the image */}
+            <p className="text-gray-600 dark:text-gray-400 text-sm mt-3 line-clamp-2">
+                {description}
+            </p>
 
             {/* Footer */}
             <div className="border-t border-white/60 dark:border-gray-700/50 mt-4 pt-4 flex flex-wrap items-center justify-between gap-3">
