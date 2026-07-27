@@ -54,7 +54,7 @@ export const AdminPage = () => {
             </h1>
 
             {/* Tabs */}
-            <div className="flex gap-4 mb-6 border-b border-gray-200 dark:border-gray-800 overflow-x-auto no-scrollbar">
+            <div className="flex flex-wrap gap-x-4 gap-y-2 mb-6 border-b border-gray-200 dark:border-gray-800">
                 <button
                     onClick={() => setTab('dashboard')}
                     className={`shrink-0 whitespace-nowrap pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
