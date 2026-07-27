@@ -175,7 +175,7 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
                                 alt={comment.author.username}
                                 className="w-10 h-10 rounded-full flex-shrink-0 bg-gray-100 dark:bg-gray-800"
                             />
-                            <div className="flex-1">
+                            <div className="flex-1 min-w-0">
                                 <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
                                     <div className="flex items-center justify-between mb-2">
                                         <span className="font-semibold text-gray-900 dark:text-white">
@@ -185,7 +185,7 @@ export const CommentsSection = ({ dealId, initialComments }: CommentsSectionProp
                                             {new Date(comment.createdAt).toLocaleDateString()}
                                         </span>
                                     </div>
-                                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{comment.content}</p>
+                                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap break-words">{comment.content}</p>
                                 </div>
 
                             </div>
