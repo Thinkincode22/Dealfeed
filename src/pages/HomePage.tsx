@@ -9,9 +9,10 @@ interface HomePageProps {
     hasMore: boolean;
     onLoadMore: () => void;
     loading: boolean;
+    onDealUpdated?: () => void;
 }
 
-export const HomePage = ({ deals, hasMore, onLoadMore, loading }: HomePageProps) => {
+export const HomePage = ({ deals, hasMore, onLoadMore, loading, onDealUpdated }: HomePageProps) => {
     return (
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
             <TodaysBestDeals deals={deals} />
@@ -20,7 +21,7 @@ export const HomePage = ({ deals, hasMore, onLoadMore, loading }: HomePageProps)
             <div id="all-deals" className="grid grid-cols-1 lg:grid-cols-3 gap-8 scroll-mt-24">
                 {/* Main Content - Deals List */}
                 <div className="lg:col-span-2">
-                    <DealList deals={deals} hasMore={hasMore} onLoadMore={onLoadMore} loading={loading} />
+                    <DealList deals={deals} hasMore={hasMore} onLoadMore={onLoadMore} loading={loading} onDealUpdated={onDealUpdated} />
                 </div>
 
                 {/* Sidebar */}
