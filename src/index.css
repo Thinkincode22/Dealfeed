@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    /* Guards against any element accidentally exceeding 100vw (e.g. an
+       un-wrapped row of buttons on a narrow screen). Unlike overflow-x:
+       hidden, `clip` doesn't force overflow-y to a scrolling value, so
+       it doesn't break position: sticky descendants. */
+    overflow-x: clip;
+  }
+
   body {
     @apply bg-gray-50 text-gray-900 antialiased;
   }
