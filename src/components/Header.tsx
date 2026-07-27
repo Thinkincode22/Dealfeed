@@ -108,15 +108,15 @@ export const Header = () => {
                                     <NotificationDropdown />
                                     <Link
                                         to="/create-deal"
-                                        className="p-2 sm:px-4 sm:py-2 flex items-center gap-2 bg-white text-violet-700 rounded-full hover:bg-violet-50 transition-colors font-semibold text-sm shadow-sm"
+                                        className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white text-violet-700 rounded-full hover:bg-violet-50 transition-colors font-semibold text-sm shadow-sm"
                                     >
                                         <Plus size={18} />
-                                        <span className="hidden sm:inline">Dodaj ofertę</span>
+                                        <span>Dodaj ofertę</span>
                                     </Link>
                                     {canModerate && (
                                         <Link
                                             to="/admin"
-                                            className="p-2 text-white/90 hover:bg-white/20 rounded-full transition-colors"
+                                            className="hidden sm:flex p-2 text-white/90 hover:bg-white/20 rounded-full transition-colors"
                                             title="Panel admina"
                                         >
                                             <Shield size={20} />
@@ -144,6 +144,24 @@ export const Header = () => {
                                                     {user?.profile?.username || 'User'}
                                                 </p>
                                             </div>
+                                            <Link
+                                                to="/create-deal"
+                                                onClick={() => setProfileMenuOpen(false)}
+                                                className="sm:hidden flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-colors"
+                                            >
+                                                <Plus size={16} />
+                                                Dodaj ofertę
+                                            </Link>
+                                            {canModerate && (
+                                                <Link
+                                                    to="/admin"
+                                                    onClick={() => setProfileMenuOpen(false)}
+                                                    className="sm:hidden flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-colors"
+                                                >
+                                                    <Shield size={16} />
+                                                    Panel admina
+                                                </Link>
+                                            )}
                                             <Link
                                                 to="/profile"
                                                 onClick={() => setProfileMenuOpen(false)}

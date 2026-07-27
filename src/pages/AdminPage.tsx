@@ -54,10 +54,10 @@ export const AdminPage = () => {
             </h1>
 
             {/* Tabs */}
-            <div className="flex gap-4 mb-6 border-b border-gray-200 dark:border-gray-800">
+            <div className="flex gap-4 mb-6 border-b border-gray-200 dark:border-gray-800 overflow-x-auto no-scrollbar">
                 <button
                     onClick={() => setTab('dashboard')}
-                    className={`pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                    className={`shrink-0 whitespace-nowrap pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
                         tab === 'dashboard'
                             ? 'border-violet-600 text-violet-600'
                             : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -68,7 +68,7 @@ export const AdminPage = () => {
                 </button>
                 <button
                     onClick={() => setTab('moderation')}
-                    className={`pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                    className={`shrink-0 whitespace-nowrap pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
                         tab === 'moderation'
                             ? 'border-violet-600 text-violet-600'
                             : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -79,7 +79,7 @@ export const AdminPage = () => {
                 </button>
                 <button
                     onClick={() => setTab('all-deals')}
-                    className={`pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                    className={`shrink-0 whitespace-nowrap pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
                         tab === 'all-deals'
                             ? 'border-violet-600 text-violet-600'
                             : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -91,7 +91,7 @@ export const AdminPage = () => {
                 {isAdmin && (
                     <button
                         onClick={() => setTab('users')}
-                        className={`pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                        className={`shrink-0 whitespace-nowrap pb-3 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
                         tab === 'users'
                             ? 'border-violet-600 text-violet-600'
                             : 'border-transparent text-gray-500 hover:text-gray-700'
